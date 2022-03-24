@@ -1,9 +1,11 @@
+import '~/styles/globals.css'
+
 import type { NextPage } from 'next'
 import type { AppProps } from 'next/app'
 import type { ReactElement, ReactNode } from 'react'
 import { RecoilRoot } from 'recoil'
+
 import DefaultLayout from '~/layouts/DefaultLayout'
-import '~/styles/globals.css'
 
 type NextPageWithLayout = NextPage & {
   getLayout?: (page: ReactElement) => ReactNode

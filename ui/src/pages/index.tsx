@@ -1,4 +1,5 @@
 import type { NextPage } from 'next'
+
 import SampleCounter from '~/components/organisms/SampleCounter'
 
 const Index: NextPage = () => {
