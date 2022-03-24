@@ -3,10 +3,14 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "serve": "next dev",
+    "tcm:watch": "tcm -p 'src/**/*.module.css' -w",
+    "dev": "concurrently \"npm:serve\" \"npm:tcm:watch\" -c blue,green",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "type-check": "tsc",
+    "format": "prettier --write ."
   },
   "dependencies": {
     "next": "12.1.0",
@@ -16,8 +20,12 @@
   "devDependencies": {
     "@types/node": "17.0.23",
     "@types/react": "17.0.42",
+    "concurrently": "7.0.0",
     "eslint": "8.11.0",
     "eslint-config-next": "12.1.0",
+    "eslint-config-prettier": "8.5.0",
+    "prettier": "2.6.0",
+    "typed-css-modules": "0.7.0",
     "typescript": "4.6.2"
   }
 }

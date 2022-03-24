@@ -36,3 +36,9 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# ESLint
+.eslintcache
+
+# typed-css-modules
+*.module.css.d.ts
