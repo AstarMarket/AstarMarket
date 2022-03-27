@@ -13,6 +13,7 @@
     "format": "prettier --write ."
   },
   "dependencies": {
+    "@metamask/providers": "8.1.1",
     "daisyui": "2.11.1",
     "next": "12.1.0",
     "react": "17.0.2",
