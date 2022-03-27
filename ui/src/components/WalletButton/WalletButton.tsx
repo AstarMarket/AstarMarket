@@ -30,7 +30,7 @@ const WalletButton: VFC = () => {
     )
   }
 
-  const disconnectWalletButton = () => {
+  const walletDropdown = () => {
     return (
       <div className="dropdown dropdown-end">
         <label tabIndex={0} className="btn btn-info text-white rounded-full">{Wallet.slice(0, 6) + '...' + Wallet.slice(-4)}</label>
@@ -43,7 +43,7 @@ const WalletButton: VFC = () => {
 
   return (
     <>
-      {Wallet.length > 0 ? disconnectWalletButton() : connectWalletButton()}
+      {Wallet.length > 0 ? walletDropdown() : connectWalletButton()}
     </>
   )
 }

@@ -1,7 +1,5 @@
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil'
 
-import Wallet from '~/types/Wallet'
-
 const walletAtom = atom<string>({
   key: 'wallet',
   default: ''
