@@ -33,6 +33,7 @@ VSCode を推奨します。推奨する拡張機能については、`../.vscod
   },
   "[typescriptreact]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "eslint.workingDirectories": ["./ui"]
 }
 ```
