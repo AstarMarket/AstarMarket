@@ -7,11 +7,12 @@ const WalletButton: VFC = () => {
   const { setWallet } = useWalletMutators()
 
   const connect = () => {
-    const ethereum = (window as any).ethereum
-    if (ethereum) {
-      ethereum.request({method: 'eth_requestAccounts'})
-        .then((result: Array<string>) => {
-          setWallet(result[0])
+    if (window.ethereum) {
+      window.ethereum.request<string[]>({ method: 'eth_requestAccounts' })
+        .then((result) => {
+          if (result?.[0]) {
+            setWallet(result[0])
+          }
         })
     } else {
       // TODO: error
