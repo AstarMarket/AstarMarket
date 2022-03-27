@@ -3,7 +3,7 @@ import type { VFC } from 'react'
 import { useWalletMutators,useWalletState } from '~/state/wallet'
 
 const WalletButton: VFC = () => {
-  const Wallet = useWalletState()
+  const wallet = useWalletState()
   const { setWallet } = useWalletMutators()
 
   const connect = () => {
@@ -33,7 +33,7 @@ const WalletButton: VFC = () => {
   const walletDropdown = () => {
     return (
       <div className="dropdown dropdown-end">
-        <label tabIndex={0} className="btn btn-info text-white rounded-full">{Wallet.slice(0, 6) + '...' + Wallet.slice(-4)}</label>
+        <label tabIndex={0} className="btn btn-info text-white rounded-full">{wallet.slice(0, 6) + '...' + wallet.slice(-4)}</label>
         <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52 mt-4">
           <li><a onClick={() => disconnect()}>Disconnect</a></li>
         </ul>
@@ -43,7 +43,7 @@ const WalletButton: VFC = () => {
 
   return (
     <>
-      {Wallet.length > 0 ? walletDropdown() : connectWalletButton()}
+      {wallet.length > 0 ? walletDropdown() : connectWalletButton()}
     </>
   )
 }
