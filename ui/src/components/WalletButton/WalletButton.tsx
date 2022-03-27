@@ -33,7 +33,7 @@ const WalletButton: VFC = () => {
   const disconnectWalletButton = () => {
     return (
       <div className="dropdown dropdown-end">
-        <label tabIndex={0} className="btn btn-info text-white rounded-full">{Wallet}</label>
+        <label tabIndex={0} className="btn btn-info text-white rounded-full">{Wallet.slice(0, 6) + '...' + Wallet.slice(-4)}</label>
         <ul tabIndex={0} className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52 mt-4">
           <li><a onClick={() => disconnect()}>Disconnect</a></li>
         </ul>
