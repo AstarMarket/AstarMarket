@@ -1,6 +1,6 @@
 import type { VFC } from 'react'
 
-import { useCounterMutators,useCounterState } from '~/state/counter'
+import { useCounterMutators, useCounterState } from '~/state/counter'
 
 const SampleCounter: VFC = () => {
   const counter = useCounterState()

@@ -1,16 +1,18 @@
-import { ethers } from 'ethers';
+import { ethers } from 'ethers'
 import { useState, VFC } from 'react'
 
-import GreeterConstruct from '~/contracts/construct/Greeter';
+import GreeterConstruct from '~/contracts/construct/Greeter'
 
 // 型 'MetaMaskInpageProvider' の引数を型 'ExternalProvider | JsonRpcFetchFunc' のパラメーターに割り当てることはできません。
-declare let window: any;
+declare let window: any
 
 const MarketForm: VFC = () => {
-  const [marketTitle, setMarketTitle] = useState('');
-  const [contractAddress, setContractAddress] = useState('');
+  const [marketTitle, setMarketTitle] = useState('')
+  const [contractAddress, setContractAddress] = useState('')
 
-  const deployContract = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
+  const deployContract = async (
+    e: React.MouseEvent<HTMLElement, MouseEvent>
+  ) => {
     e.preventDefault()
 
     if (marketTitle.length === 0) {
@@ -18,8 +20,8 @@ const MarketForm: VFC = () => {
       return
     }
 
-    if (typeof window.ethereum !== "undefined") {
-      const provider = new ethers.providers.Web3Provider(window.ethereum);
+    if (typeof window.ethereum !== undefined) {
+      const provider = new ethers.providers.Web3Provider(window.ethereum)
       const factory = new ethers.ContractFactory(
         GreeterConstruct.abi,
         GreeterConstruct.bytecode,
@@ -31,10 +33,10 @@ const MarketForm: VFC = () => {
           setContractAddress(res.address)
         })
         .catch((err) => {
-          if (err.message !== "undefined") {
+          if (err?.message) {
             alert(err.message)
           } else {
-            alert("deploy transaction is failed")
+            alert('deploy transaction is failed')
           }
         })
     }
@@ -43,11 +45,34 @@ const MarketForm: VFC = () => {
   return (
     <>
       <form>
-       <input type="text" name="title" id="title" placeholder="Title" onChange={(e) => setMarketTitle(e.target.value)} className="input input-bordered w-full max-w-xs"></input>
-       <button type="submit" className="btn btn-info text-white ml-4" onClick={deployContract}>Deploy</button>
+        <input
+          type="text"
+          name="title"
+          id="title"
+          placeholder="Title"
+          onChange={(e) => setMarketTitle(e.target.value)}
+          className="input input-bordered w-full max-w-xs"
+        ></input>
+        <button
+          type="submit"
+          className="btn btn-info text-white ml-4"
+          onClick={deployContract}
+        >
+          Deploy
+        </button>
       </form>
 
-      <div className="mt-8">deployed contract address: <a className="text-sky-400" href={'https://shibuya.subscan.io/account/' + contractAddress} target='_blank' rel='noreferrer noopener' >{contractAddress}</a></div>
+      <div className="mt-8">
+        deployed contract address:{' '}
+        <a
+          className="text-sky-400"
+          href={'https://shibuya.subscan.io/account/' + contractAddress}
+          target="_blank"
+          rel="noreferrer noopener"
+        >
+          {contractAddress}
+        </a>
+      </div>
     </>
   )
 }

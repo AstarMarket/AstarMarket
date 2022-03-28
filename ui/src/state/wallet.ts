@@ -2,7 +2,7 @@ import { atom, useRecoilValue, useSetRecoilState } from 'recoil'
 
 const walletAtom = atom<string>({
   key: 'wallet',
-  default: ''
+  default: '',
 })
 
 export const useWalletState = () => {

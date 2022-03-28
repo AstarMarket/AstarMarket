@@ -7,7 +7,9 @@ const AppHeader: VFC = () => {
     <div className="relative bg-white border-b">
       <div className="flex items-center container mx-auto py-6 px-8">
         <div className="text-2xl font-bold">DEMO</div>
-        <span className="ml-auto"><WalletButton /></span>
+        <span className="ml-auto">
+          <WalletButton />
+        </span>
       </div>
     </div>
   )
