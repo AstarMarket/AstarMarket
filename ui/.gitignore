@@ -42,3 +42,6 @@ yarn-error.log*
 
 # typed-css-modules
 *.module.css.d.ts
+
+# local db
+pgdata
