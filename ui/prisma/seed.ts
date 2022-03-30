@@ -1,11 +1,11 @@
 import { prisma } from '../src/lib/prisma'
 
 const main = async () => {
-  await prisma.task.createMany({
+  await prisma.market.createMany({
     data: [
-      { title: 'sample task 1', done: true },
-      { title: 'sample task 2', done: true },
-      { title: 'sample task 3', done: false },
+      { title: 'sample market 1' },
+      { title: 'sample market 2' },
+      { title: 'sample market 3' },
     ],
   })
 }

@@ -3,7 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next'
 
 const prisma = new PrismaClient()
 
-export default async function tasksIndex(
+export default async function markets(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
@@ -13,10 +13,9 @@ export default async function tasksIndex(
         title: string
       }
       const { title = '' } = req.body as PostData
-      const result = await prisma.task.create({
+      const result = await prisma.market.create({
         data: {
           title,
-          done: false,
         },
       })
       return res.status(200).json(result)
