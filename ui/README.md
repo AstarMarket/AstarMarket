@@ -27,6 +27,9 @@ $ npx prisma studio
 # マイグレーション
 $ npx prisma migrate dev
 
+# Prisma Client のコード生成
+$ npx prisma generate
+
 # スキーマファイルのフォーマット（VSCode の拡張機能があれば、使う機会はほぼないです）
 $ npx prisma format
 ```
