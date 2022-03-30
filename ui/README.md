@@ -4,15 +4,32 @@
 
 - Node.js（nodenv を想定していますが、`.node-version`の Node.js があれば何でも良いです）
 - Yarn
+- Docker
 
 ```shell
-$ cd ui
 $ nodenv install
 $ yarn
 $ yarn dev
+# 別タブ
+$ docker compose up
 ```
 
 http://localhost:3000 が立ち上がります。
+
+### Prisma
+
+Prisma 関連でよく使うコマンドをまとめます。
+
+```shell
+# データの確認
+$ npx prisma studio
+
+# マイグレーション
+$ npx prisma migrate dev
+
+# スキーマファイルのフォーマット（VSCode の拡張機能があれば、使う機会はほぼないです）
+$ npx prisma format
+```
 
 ### エディターについて
 

@@ -3,6 +3,7 @@
     "esbenp.prettier-vscode",
     "dbaeumer.vscode-eslint",
     "bradlc.vscode-tailwindcss",
-    "JuanBlanco.solidity"
+    "JuanBlanco.solidity",
+    "Prisma.prisma"
   ]
 }
