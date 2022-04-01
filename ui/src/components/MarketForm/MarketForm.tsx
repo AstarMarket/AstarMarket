@@ -2,6 +2,7 @@ import { ethers } from 'ethers'
 import { useState, VFC } from 'react'
 
 import GreeterConstruct from '~/contracts/construct/Greeter'
+import * as api from '~/services'
 
 // 型 'MetaMaskInpageProvider' の引数を型 'ExternalProvider | JsonRpcFetchFunc' のパラメーターに割り当てることはできません。
 declare let window: any
@@ -29,7 +30,8 @@ const MarketForm: VFC = () => {
       )
       await factory
         .deploy(marketTitle)
-        .then((res) => {
+        .then(async (res) => {
+          await api.postMarkets({ title: marketTitle, contract: res.address })
           setContractAddress(res.address)
         })
         .catch((err) => {
