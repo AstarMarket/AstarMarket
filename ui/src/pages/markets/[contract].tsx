@@ -1,4 +1,4 @@
-import type { GetServerSideProps,InferGetServerSidePropsType } from 'next'
+import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 
 import { prisma } from '~/lib/prisma'
 
