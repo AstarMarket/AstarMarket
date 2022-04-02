@@ -11,11 +11,13 @@ export default async function markets(
     case 'POST': {
       type PostData = {
         title: string
+        contract: string
       }
-      const { title = '' } = req.body as PostData
+      const { title = '', contract = '' } = req.body as PostData
       const result = await prisma.market.create({
         data: {
           title,
+          contract,
         },
       })
       return res.status(200).json(result)

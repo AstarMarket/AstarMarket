@@ -9,8 +9,10 @@ type DefaultLayoutProps = {
 const DefaultLayout: VFC<DefaultLayoutProps> = ({ children }) => {
   return (
     <>
-      <AppHeader />
-      <div className="container p-5 mx-auto">{children}</div>
+      <div className="border-b">
+        <AppHeader />
+      </div>
+      <div className="max-w-5xl mx-auto">{children}</div>
     </>
   )
 }

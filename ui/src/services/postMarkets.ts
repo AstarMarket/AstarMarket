@@ -4,6 +4,7 @@ import * as request from '~/services/request'
 
 type Data = {
   title: string
+  contract: string
 }
 
 export function postMarkets(data: Data) {
