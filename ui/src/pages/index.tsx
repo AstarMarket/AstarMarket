@@ -19,8 +19,8 @@ export default function Index({
       <ul className="grid grid-cols-3 gap-10 mt-4">
         {markets.map((market) => {
           return (
-            <Link key={market.id} href={`markets/${market.contract}`}>
-              <a className="p-5 border rounded cursor-pointer" key={market.id}>
+            <Link key={market.id} href={`/markets/${market.contract}`}>
+              <a className="p-5 border rounded cursor-pointer">
                 {market.title}
               </a>
             </Link>
