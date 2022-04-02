@@ -68,7 +68,7 @@ const MarketForm: VFC = () => {
         deployed contract address:{' '}
         <a
           className="text-sky-400"
-          href={'https://shibuya.subscan.io/account/' + contractAddress}
+          href={process.env.SHIBUYA_SUBSCAN_URL + '/account/' + contractAddress}
           target="_blank"
           rel="noreferrer noopener"
         >
