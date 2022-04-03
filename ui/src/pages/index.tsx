@@ -20,7 +20,7 @@ export default function Index({
         {markets.map((market) => {
           return (
             <Link key={market.id} href={`/markets/${market.contract}`}>
-              <a className="p-5 border rounded cursor-pointer">
+              <a className="p-5 border rounded cursor-pointer hover:border-gray-300">
                 {market.title}
               </a>
             </Link>
