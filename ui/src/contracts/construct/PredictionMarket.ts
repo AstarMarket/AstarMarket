@@ -1,7 +1,7 @@
-const GreeterConstruct = {
+const PredictionMarketConstruct = {
   _format: 'hh-sol-artifact-1',
-  contractName: 'Greeter',
-  sourceName: 'contracts/Greeter.sol',
+  contractName: 'PredictionMarket',
+  sourceName: 'contracts/PredictionMarket.sol',
   abi: [
     {
       inputs: [{ internalType: 'string', name: '_greeting', type: 'string' }],
@@ -31,4 +31,4 @@ const GreeterConstruct = {
   deployedLinkReferences: {},
 }
 
-export default GreeterConstruct
+export default PredictionMarketConstruct
