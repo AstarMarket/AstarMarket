@@ -2,7 +2,6 @@ import type { Market } from '@prisma/client'
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import ErrorPage from 'next/error'
 import Link from 'next/link'
-import { useState } from 'react'
 
 import BuyForm from '~/components/BuyForm'
 import { prisma } from '~/lib/prisma'

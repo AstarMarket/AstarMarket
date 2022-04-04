@@ -15,18 +15,19 @@ class ContractClient {
     )
   }
 
-  public deploy = (title: string) => {
-    return this.factory.deploy(title)
+  public deploy = () => {
+    return this.factory.deploy()
   }
 
-  public buy = async (contractAddress: string, vote: number) => {
+  public buy = async (contractAddress: string, currentAccountAddress: string, vote: number, price: string) => {
     const signer = this.provider.getSigner()
     const contract = new ethers.Contract(
       contractAddress,
       PredictionMarketConstruct.abi,
       signer
     )
-    await contract.buy(vote)
+    const overrides = { from: currentAccountAddress, value: ethers.utils.parseEther(price) }
+    await contract.functions.buy(vote, overrides)
   }
 }
 

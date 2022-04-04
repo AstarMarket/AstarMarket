@@ -2,6 +2,8 @@ import { Market } from '@prisma/client'
 import { FC, useState } from 'react'
 
 import ContractClient from '~/lib/contractClient'
+import { useWalletState } from '~/state/wallet'
+import { Vote } from '~/types/vote'
 
 interface Props {
   market: Market
@@ -10,6 +12,9 @@ interface Props {
 const BuyForm: FC<Props> = (props) => {
   const [isCheckedYes, setIsCheckedYes] = useState(true)
   const [isCheckedNo, setIsCheckedNo] = useState(false)
+  const [buyPrice, setBuyPrice] = useState('')
+  const [isBuySuccess, setIsBuySuccess] = useState(false)
+  const wallet = useWalletState()
 
   const buy = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
     if (!props.market) {
@@ -18,8 +23,11 @@ const BuyForm: FC<Props> = (props) => {
 
     e.preventDefault()
     const contractClient = new ContractClient(window)
-    const vote = isCheckedYes ? 0 : 1
-    contractClient.buy(props.market.contract, vote)
+    const vote = isCheckedYes ? Vote.Yes : Vote.No
+
+    contractClient.buy(props.market.contract, wallet, vote, buyPrice).then(() => {
+      setIsBuySuccess(true)
+    })
   }
 
   return (
@@ -74,8 +82,9 @@ const BuyForm: FC<Props> = (props) => {
               type="text"
               placeholder="10"
               className="input input-bordered w-full"
+              onChange={(e) => setBuyPrice(e.target.value)}
             />
-            <span>USD</span>
+            <span>SBY</span>
           </label>
         </div>
         <button
@@ -85,6 +94,8 @@ const BuyForm: FC<Props> = (props) => {
         >
           Buy
         </button>
+
+        {isBuySuccess && <div className="mt-4">購入が成功しました。</div>}
       </div>
     </form>
   )

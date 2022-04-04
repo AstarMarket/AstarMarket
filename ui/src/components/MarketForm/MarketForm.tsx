@@ -23,7 +23,7 @@ const MarketForm: VFC = () => {
     if (typeof window.ethereum !== undefined) {
       const contractClient = new ContractClient(window)
       await contractClient
-        .deploy(marketTitle)
+        .deploy()
         .then(async (res) => {
           await api.postMarkets({ title: marketTitle, contract: res.address })
           setContractAddress(res.address)
