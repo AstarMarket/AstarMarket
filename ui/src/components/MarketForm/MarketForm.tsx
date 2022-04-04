@@ -1,7 +1,6 @@
-import { ethers } from 'ethers'
 import { useState, VFC } from 'react'
 
-import PredictionMarketConstruct from '~/contracts/construct/PredictionMarket'
+import ContractClient from '~/lib/contractClient'
 import * as api from '~/services'
 
 // 型 'MetaMaskInpageProvider' の引数を型 'ExternalProvider | JsonRpcFetchFunc' のパラメーターに割り当てることはできません。
@@ -22,13 +21,8 @@ const MarketForm: VFC = () => {
     }
 
     if (typeof window.ethereum !== undefined) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
-      const factory = new ethers.ContractFactory(
-        PredictionMarketConstruct.abi,
-        PredictionMarketConstruct.bytecode,
-        provider.getSigner()
-      )
-      await factory
+      const contractClient = new ContractClient(window)
+      await contractClient
         .deploy(marketTitle)
         .then(async (res) => {
           await api.postMarkets({ title: marketTitle, contract: res.address })
