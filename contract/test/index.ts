@@ -1,6 +1,6 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
-import { Vote } from "../types/Vote";
+import { Vote } from "../types/vote";
 
 describe("PredictionMarket", function () {
   describe("buy", () => {
