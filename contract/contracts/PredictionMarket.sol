@@ -29,6 +29,7 @@ contract PredictionMarket {
 
     function buy(Vote _vote) external payable {
         require(!marketInfo.isResolved);
+        require(buyers[msg.sender].amount == 0, "Already bought.");
         buyers[msg.sender].amount = msg.value;
         buyers[msg.sender].vote = _vote;
         emit Buy(msg.sender, _vote, msg.value);
@@ -47,7 +48,7 @@ contract PredictionMarket {
         (bool success, ) = (msg.sender).call{value: buyers[msg.sender].amount}(
             ""
         );
-        require(success, "Failed to withdraw.");
+        require(success, "Failed to sell.");
         emit Sell(msg.sender, buyers[msg.sender].amount);
         delete buyers[msg.sender];
     }
