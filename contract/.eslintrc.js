@@ -20,5 +20,7 @@ module.exports = {
       "error",
       { ignores: ["modules"] },
     ],
+    "no-unused-vars": "off",
+    "@typescript-eslint/no-unused-vars": ["error"],
   },
 };
