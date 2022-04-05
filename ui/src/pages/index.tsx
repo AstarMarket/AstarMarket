@@ -5,7 +5,7 @@ import AppHero from '~/components/AppHero'
 import { prisma } from '~/lib/prisma'
 
 export const getServerSideProps = async () => {
-  const markets = await prisma.market.findMany()
+  const markets = await prisma.market.findMany({ orderBy: { createdAt: 'desc' } })
   return { props: { markets } }
 }
 
