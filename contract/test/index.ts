@@ -1,37 +1,38 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
 import { Vote } from "../types/vote";
+import { PredictionMarket } from "../typechain";
 
 describe("PredictionMarket", function () {
+  let market: PredictionMarket;
+  beforeEach(async () => {
+    const PredictionMarket = await ethers.getContractFactory(
+      "PredictionMarket"
+    );
+    market = await PredictionMarket.deploy();
+    await market.deployed();
+  });
   describe("buy", () => {
     it("Should emit Buy", async () => {
-      const PredictionMarket = await ethers.getContractFactory(
-        "PredictionMarket"
-      );
-      const market = await PredictionMarket.deploy();
-      await market.deployed();
       expect(await market.buy(Vote.Yes))
         .to.emit(market, "Buy")
         .withArgs(Vote.Yes);
     });
     it("Should update buyers value", async () => {
-      const PredictionMarket = await ethers.getContractFactory(
-        "PredictionMarket"
-      );
-      const market = await PredictionMarket.deploy();
-      await market.deployed();
       const boughtValue = ethers.utils.parseEther("123");
       const from = (await market.buy(Vote.Yes, { value: boughtValue })).from;
       expect((await market.buyers(from)).amount).to.be.equal(boughtValue);
     });
+    it("Only one position", async () => {
+      const boughtValue = ethers.utils.parseEther("123");
+      await market.buy(Vote.Yes, { value: boughtValue });
+      await expect(
+        market.buy(Vote.No, { value: boughtValue })
+      ).to.be.revertedWith("Already bought.");
+    });
   });
   describe("getPosition", () => {
     it("Returns position value correctly", async () => {
-      const PredictionMarket = await ethers.getContractFactory(
-        "PredictionMarket"
-      );
-      const market = await PredictionMarket.deploy();
-      await market.deployed();
       const [user] = await ethers.getSigners();
       const buyAmount = ethers.utils.parseEther("123");
       await market.buy(Vote.No, {
@@ -45,11 +46,6 @@ describe("PredictionMarket", function () {
   });
   describe("sell", () => {
     it("Sell correctly", async () => {
-      const PredictionMarket = await ethers.getContractFactory(
-        "PredictionMarket"
-      );
-      const market = await PredictionMarket.deploy();
-      await market.deployed();
       const from = (
         await market.buy(Vote.Yes, { value: ethers.utils.parseEther("123") })
       ).from;
@@ -57,11 +53,6 @@ describe("PredictionMarket", function () {
       expect((await market.buyers(from)).amount).to.be.equal("0");
     });
     it("Cannot sell without buy", async () => {
-      const PredictionMarket = await ethers.getContractFactory(
-        "PredictionMarket"
-      );
-      const market = await PredictionMarket.deploy();
-      await market.deployed();
       await expect(market.sell()).to.be.revertedWith("Not bought.");
     });
   });
