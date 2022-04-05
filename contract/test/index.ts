@@ -1,19 +1,19 @@
 import { expect } from "chai";
 import { ethers } from "hardhat";
+import { Vote } from "../types/vote";
 
-describe("Greeter", function () {
-  it("Should return the new greeting once it's changed", async function () {
-    const Greeter = await ethers.getContractFactory("Greeter");
-    const greeter = await Greeter.deploy("Hello, world!");
-    await greeter.deployed();
+describe("PredictionMarket", function () {
+  describe("buy", () => {
+    it("Should emit Buy", async () => {
+      const PredictionMarket = await ethers.getContractFactory(
+        "PredictionMarket"
+      );
+      const market = await PredictionMarket.deploy();
+      await market.deployed();
 
-    expect(await greeter.greet()).to.equal("Hello, world!");
-
-    const setGreetingTx = await greeter.setGreeting("Hola, mundo!");
-
-    // wait until the transaction is mined
-    await setGreetingTx.wait();
-
-    expect(await greeter.greet()).to.equal("Hola, mundo!");
+      expect(await market.buy(Vote.Yes))
+        .to.emit(market, "Buy")
+        .withArgs(Vote.Yes);
+    });
   });
 });

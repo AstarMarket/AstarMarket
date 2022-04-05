@@ -1,7 +1,9 @@
 import type { Market } from '@prisma/client'
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import ErrorPage from 'next/error'
+import Link from 'next/link'
 
+import BuyForm from '~/components/BuyForm'
 import { prisma } from '~/lib/prisma'
 
 type ServerSideProps = {
@@ -27,7 +29,30 @@ export default function Index({
 
   return (
     <div className="mt-8">
-      <div className="p-5 border rounded">{market.title}</div>
+      <div className="p-5 border rounded">
+        <h1 className="font-bold text-xl">{market.title}</h1>
+        <div className="mt-4">
+          <p className="text-sm text-gray-500">
+            Deployed by:&nbsp;
+            <Link
+              href={
+                process.env.SHIBUYA_SUBSCAN_URL + '/account/' + market.contract
+              }
+            >
+              <a
+                className="text-sky-400"
+                target="_blank"
+                rel="noreferrer noopener"
+              >
+                {market.contract.slice(0, 6) +
+                  '...' +
+                  market.contract.slice(-4)}
+              </a>
+            </Link>
+          </p>
+        </div>
+      </div>
+      <BuyForm market={market} />
     </div>
   )
 }

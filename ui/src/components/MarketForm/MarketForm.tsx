@@ -1,7 +1,6 @@
-import { ethers } from 'ethers'
 import { useState, VFC } from 'react'
 
-import GreeterConstruct from '~/contracts/construct/Greeter'
+import ContractClient from '~/lib/contractClient'
 import * as api from '~/services'
 
 // 型 'MetaMaskInpageProvider' の引数を型 'ExternalProvider | JsonRpcFetchFunc' のパラメーターに割り当てることはできません。
@@ -22,14 +21,9 @@ const MarketForm: VFC = () => {
     }
 
     if (typeof window.ethereum !== undefined) {
-      const provider = new ethers.providers.Web3Provider(window.ethereum)
-      const factory = new ethers.ContractFactory(
-        GreeterConstruct.abi,
-        GreeterConstruct.bytecode,
-        provider.getSigner()
-      )
-      await factory
-        .deploy(marketTitle)
+      const contractClient = new ContractClient(window)
+      await contractClient
+        .deploy()
         .then(async (res) => {
           await api.postMarkets({ title: marketTitle, contract: res.address })
           setContractAddress(res.address)
@@ -68,7 +62,7 @@ const MarketForm: VFC = () => {
         deployed contract address:{' '}
         <a
           className="text-sky-400"
-          href={'https://shibuya.subscan.io/account/' + contractAddress}
+          href={process.env.SHIBUYA_SUBSCAN_URL + '/account/' + contractAddress}
           target="_blank"
           rel="noreferrer noopener"
         >
