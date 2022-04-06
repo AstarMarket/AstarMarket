@@ -31,7 +31,7 @@ export default function Index({
               <a className="flex p-5 border rounded cursor-pointer hover:border-gray-300">
                 <span className="mr-2">{market.title}</span>
                 {isNew(market) && (
-                  <span className="p-1 text-green-300 bg-green-100 rounded ml-auto h-8 w-12 text-center">
+                  <span className="p-1 text-green-400 bg-green-100 rounded ml-auto h-8 w-12 text-center">
                     New
                   </span>
                 )}
