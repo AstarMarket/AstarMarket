@@ -1,22 +1,34 @@
-import type { VFC } from 'react'
+import { useEffect, useState, VFC } from 'react'
 
 import { useWalletMutators, useWalletState } from '~/state/wallet'
 
 const WalletButton: VFC = () => {
   const wallet = useWalletState()
   const { setWallet } = useWalletMutators()
+  const [connected, setConnected] = useState(false)
 
-  const connect = () => {
+  useEffect(() => {
+    setConnected(wallet.length > 0)
     if (window.ethereum) {
-      window.ethereum
-        .request<string[]>({ method: 'eth_requestAccounts' })
-        .then((result) => {
-          if (result?.[0]) {
-            setWallet(result[0])
-          }
+      window.ethereum.on('accountsChanged', (accounts: any) => {
+        if (accounts.length > 0) setWallet(accounts[0])
+      })
+      window.ethereum.on('chainChanged', () => {
+        window.location.reload()
+      })
+    }
+  }, [wallet, setWallet])
+
+  const connect = async () => {
+    if (window.ethereum) {
+      try {
+        const result = await window.ethereum.request<string[]>({
+          method: 'eth_requestAccounts',
         })
-    } else {
-      // TODO: error
+        if (result?.[0]) setWallet(result[0])
+      } catch (e) {
+        console.log(e)
+      }
     }
   }
 
@@ -53,7 +65,7 @@ const WalletButton: VFC = () => {
     )
   }
 
-  return <>{wallet.length > 0 ? walletDropdown() : connectWalletButton()}</>
+  return <>{connected ? walletDropdown() : connectWalletButton()}</>
 }
 
 export default WalletButton

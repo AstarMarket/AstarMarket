@@ -36,7 +36,8 @@ class ContractClient {
       from: currentAccountAddress,
       value: ethers.utils.parseEther(price),
     }
-    await contract.functions.buy(vote, overrides)
+    const buyTxn = await contract.functions.buy(vote, overrides)
+    await buyTxn.wait()
   }
 
   public getPosition = async (

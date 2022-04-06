@@ -1,11 +1,18 @@
 import { useCallback } from 'react'
 import { atom, useRecoilValue, useSetRecoilState } from 'recoil'
+import { recoilPersist } from 'recoil-persist'
 
 import type { SetterOrUpdaterArg } from '~/types/recoil'
+
+const { persistAtom } = recoilPersist({
+  key: 'recoil-persist',
+  storage: typeof window === 'undefined' ? undefined : window.localStorage,
+})
 
 const walletAtom = atom<string>({
   key: 'wallet',
   default: '',
+  effects_UNSTABLE: [persistAtom],
 })
 
 export const useWalletState = () => {
