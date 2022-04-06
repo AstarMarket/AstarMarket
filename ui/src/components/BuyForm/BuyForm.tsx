@@ -1,5 +1,5 @@
 import { Market } from '@prisma/client'
-import { FC, useState } from 'react'
+import { FC, FormEvent, useState } from 'react'
 
 import ContractClient from '~/lib/contractClient'
 import { useWalletState } from '~/state/wallet'
@@ -13,27 +13,30 @@ const BuyForm: FC<Props> = (props) => {
   const [isCheckedYes, setIsCheckedYes] = useState(true)
   const [isCheckedNo, setIsCheckedNo] = useState(false)
   const [buyPrice, setBuyPrice] = useState('')
+  const [isProcessingBuy, setIsProcessingBuy] = useState(false)
   const [isBuySuccess, setIsBuySuccess] = useState(false)
   const wallet = useWalletState()
 
-  const buy = async (e: React.MouseEvent<HTMLElement, MouseEvent>) => {
-    if (!props.market) {
-      return
-    }
-
+  const handleBuy = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
+    if (!props.market) return
+
+    setIsProcessingBuy(true)
     const contractClient = new ContractClient(window)
     const vote = isCheckedYes ? Vote.Yes : Vote.No
 
-    contractClient
-      .buy(props.market.contract, wallet, vote, buyPrice)
-      .then(() => {
-        setIsBuySuccess(true)
-      })
+    try {
+      await contractClient.buy(props.market.contract, wallet, vote, buyPrice)
+      setIsBuySuccess(true)
+    } catch (error) {
+      console.error(error)
+    } finally {
+      setIsProcessingBuy(false)
+    }
   }
 
   return (
-    <form className="border rounded p-5">
+    <form className="border rounded p-5" onSubmit={(e) => handleBuy(e)}>
       <span className="text-md">Pick outcome</span>
       <div className="mt-2 grid grid-cols-2 gap-4">
         <input
@@ -87,8 +90,10 @@ const BuyForm: FC<Props> = (props) => {
       </div>
       <button
         type="submit"
-        onClick={buy}
-        className="btn btn-primary text-white w-full"
+        disabled={isProcessingBuy}
+        className={`btn btn-primary text-white w-full ${
+          isProcessingBuy && 'loading'
+        }`}
       >
         Buy
       </button>

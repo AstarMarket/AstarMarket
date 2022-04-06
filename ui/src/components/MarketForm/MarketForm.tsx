@@ -40,30 +40,30 @@ const MarketForm: VFC = () => {
 
   return (
     <>
-      <form className='border rounded p-6'>
+      <form className="border rounded p-6">
         <div>
-          <label htmlFor="title" className='w-full'>
+          <label htmlFor="title" className="w-full">
             Set Market Title
           </label>
         </div>
-        <div className='mt-4'>
-        <input
-          type="text"
-          name="title"
-          id="title"
-          placeholder="Title"
-          onChange={(e) => setMarketTitle(e.target.value)}
-          className="input input-bordered w-full max-w-xs"
-        />
+        <div className="mt-4">
+          <input
+            type="text"
+            name="title"
+            id="title"
+            placeholder="Title"
+            onChange={(e) => setMarketTitle(e.target.value)}
+            className="input input-bordered w-full max-w-xs"
+          />
         </div>
-        <div className='mt-8'>
-        <button
-          type="submit"
-          className="btn btn-info text-white"
-          onClick={deployContract}
-        >
-          Deploy
-        </button>
+        <div className="mt-8">
+          <button
+            type="submit"
+            className="btn btn-info text-white"
+            onClick={deployContract}
+          >
+            Deploy
+          </button>
         </div>
       </form>
 
