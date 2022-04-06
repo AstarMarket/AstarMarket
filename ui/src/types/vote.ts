@@ -1,4 +1,4 @@
 export enum Vote {
   Yes,
-  No
+  No,
 }
