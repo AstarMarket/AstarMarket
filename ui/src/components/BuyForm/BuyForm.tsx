@@ -1,32 +1,30 @@
 import { Market } from '@prisma/client'
-import { FC, FormEvent, useState } from 'react'
+import { FormEvent, useState, VFC } from 'react'
 
+import { useMetaMask } from '~/hooks/useMetaMask'
 import ContractClient from '~/lib/contractClient'
-import { useWalletState } from '~/state/wallet'
 import { Vote } from '~/types/vote'
 
 interface Props {
   market: Market
 }
 
-const BuyForm: FC<Props> = (props) => {
+const BuyForm: VFC<Props> = (props) => {
   const [isCheckedYes, setIsCheckedYes] = useState(true)
   const [isCheckedNo, setIsCheckedNo] = useState(false)
   const [buyPrice, setBuyPrice] = useState('')
   const [isProcessingBuy, setIsProcessingBuy] = useState(false)
   const [isBuySuccess, setIsBuySuccess] = useState(false)
-  const wallet = useWalletState()
+  const { account, isLoadingAccount } = useMetaMask()
 
   const handleBuy = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault()
-    if (!props.market) return
-
+    if (!props.market || !account) return
     setIsProcessingBuy(true)
     const contractClient = new ContractClient(window)
     const vote = isCheckedYes ? Vote.Yes : Vote.No
-
     try {
-      await contractClient.buy(props.market.contract, wallet, vote, buyPrice)
+      await contractClient.buy(props.market.contract, account, vote, buyPrice)
       setIsBuySuccess(true)
     } catch (error) {
       console.error(error)
@@ -90,14 +88,21 @@ const BuyForm: FC<Props> = (props) => {
       </div>
       <button
         type="submit"
-        disabled={isProcessingBuy}
+        disabled={isProcessingBuy || buyPrice === '' || !account}
         className={`btn btn-primary text-white w-full ${
           isProcessingBuy && 'loading'
         }`}
       >
         Buy
       </button>
-      {isBuySuccess && <div className="mt-4">購入が成功しました。</div>}
+      {!isLoadingAccount && !account && (
+        <div className="text-error mt-2">
+          Please connect your account first.
+        </div>
+      )}
+      {isBuySuccess && (
+        <div className="mt-4">You have successfully purchased.</div>
+      )}
     </form>
   )
 }

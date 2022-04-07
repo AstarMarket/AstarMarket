@@ -6,9 +6,9 @@ import { useEffect, useState } from 'react'
 
 import BuyForm from '~/components/BuyForm'
 import SellForm from '~/components/SellForm'
+import { useMetaMask } from '~/hooks/useMetaMask'
 import ContractClient from '~/lib/contractClient'
 import { prisma } from '~/lib/prisma'
-import { useWalletState } from '~/state/wallet'
 
 type ServerSideProps = {
   market: Market | null
@@ -27,15 +27,18 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
 export default function Index({
   market,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
-  const wallet = useWalletState()
+  const { account, isShibuyaNetwork, isLocalhostNetwork } = useMetaMask()
   const [hasAlreadyBought, setHasAlreadyBought] = useState(false)
 
   useEffect(() => {
     async function check() {
-      if (!wallet || !market) return
+      // TODO: localhost の処理に関する条件分岐を追加
+      if (!account || !market || !isShibuyaNetwork || !isLocalhostNetwork) {
+        return
+      }
       try {
         const contractClient = new ContractClient(window)
-        const res = await contractClient.getPosition(market.contract, wallet)
+        const res = await contractClient.getPosition(market.contract, account)
         const hasAlreadyBought = !res.amount.isZero()
         setHasAlreadyBought(hasAlreadyBought)
       } catch (error) {
@@ -43,7 +46,13 @@ export default function Index({
       }
     }
     check()
-  }, [wallet, market, setHasAlreadyBought])
+  }, [
+    account,
+    market,
+    setHasAlreadyBought,
+    isShibuyaNetwork,
+    isLocalhostNetwork,
+  ])
 
   if (!market) {
     return <ErrorPage statusCode={404} />

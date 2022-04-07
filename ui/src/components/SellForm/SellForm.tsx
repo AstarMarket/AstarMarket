@@ -2,24 +2,24 @@ import { Market } from '@prisma/client'
 import type { FormEvent } from 'react'
 import { useState, VFC } from 'react'
 
+import { useMetaMask } from '~/hooks/useMetaMask'
 import ContractClient from '~/lib/contractClient'
-import { useWalletState } from '~/state/wallet'
 
 interface Props {
   market: Market
 }
 
 const SellForm: VFC<Props> = ({ market }) => {
-  const wallet = useWalletState()
+  const { account } = useMetaMask()
   const [isProcessingSell, setIsProcessingSell] = useState(false)
 
   async function handleSell(e: FormEvent<HTMLFormElement>, market: Market) {
     try {
       e.preventDefault()
-      if (!wallet || isProcessingSell) return
+      if (isProcessingSell || !account) return
       setIsProcessingSell(true)
       const contractClient = new ContractClient(window)
-      await contractClient.sell(market.contract, wallet)
+      await contractClient.sell(market.contract, account)
       alert('The sell has been completed.')
       window.location.reload()
     } catch (error) {
