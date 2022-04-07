@@ -100,7 +100,9 @@ const BuyForm: VFC<Props> = (props) => {
           Please connect your account first.
         </div>
       )}
-      {isBuySuccess && <div className="mt-4">購入に成功しました。</div>}
+      {isBuySuccess && (
+        <div className="mt-4">You have successfully purchased.</div>
+      )}
     </form>
   )
 }
