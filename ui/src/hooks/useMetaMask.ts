@@ -23,10 +23,10 @@ export const useMetaMask = () => {
     setHasProvider(!!window.ethereum)
     function handleChainChanged(_chainId: any) {
       setIsLoadingChainId(true)
-      const chainId = Number(_chainId)
-      setChainId(chainId)
-      setIsShibuyaNetwork(shibuyaChainId === chainId)
-      setIsLocalhostNetwork(localhostChainId === chainId)
+      const formattedChainId = Number(_chainId)
+      setChainId(formattedChainId)
+      setIsShibuyaNetwork(shibuyaChainId === formattedChainId)
+      setIsLocalhostNetwork(localhostChainId === formattedChainId)
       setIsLoadingChainId(false)
     }
     function handleAccountsChanged(accounts: any) {
