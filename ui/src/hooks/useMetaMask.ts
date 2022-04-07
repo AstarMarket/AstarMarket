@@ -21,6 +21,7 @@ export const useMetaMask = () => {
     }
     setProvider(window.ethereum)
     setHasProvider(!!window.ethereum)
+
     function handleChainChanged(_chainId: any) {
       setIsLoadingChainId(true)
       const formattedChainId = Number(_chainId)
@@ -29,11 +30,13 @@ export const useMetaMask = () => {
       setIsLocalhostNetwork(localhostChainId === formattedChainId)
       setIsLoadingChainId(false)
     }
+
     function handleAccountsChanged(accounts: any) {
       setIsLoadingAccount(true)
       if (accounts.length > 0) setAccount(accounts[0] ?? null)
       setIsLoadingAccount(false)
     }
+
     window.ethereum.on('chainChanged', handleChainChanged)
     window.ethereum.on('accountsChanged', handleAccountsChanged)
     return () => {
@@ -59,6 +62,7 @@ export const useMetaMask = () => {
       setIsLocalhostNetwork(localhostChainId === formattedChainId)
       setIsLoadingChainId(false)
     }
+
     async function fetchAccount() {
       if (!provider) return
       setIsLoadingAccount(true)
@@ -68,9 +72,11 @@ export const useMetaMask = () => {
       if (_accounts?.[0]) setAccount(_accounts?.[0])
       setIsLoadingAccount(false)
     }
+
     checkChainId()
     fetchAccount()
   }, [provider])
+
   const connectAccount = useCallback(async () => {
     if (!provider) return
     const _accounts = await provider.request<string[]>({
@@ -78,6 +84,7 @@ export const useMetaMask = () => {
     })
     if (_accounts?.[0]) setAccount(_accounts?.[0])
   }, [setAccount, provider])
+
   const switchToShibuya = useCallback(async () => {
     if (!provider) return
     await provider.request({
@@ -85,6 +92,7 @@ export const useMetaMask = () => {
       params: [{ chainId: ethers.utils.hexlify(shibuyaChainId) }],
     })
   }, [provider])
+
   const switchToLocalhost = useCallback(async () => {
     if (!provider) return
     await provider.request({
@@ -92,6 +100,7 @@ export const useMetaMask = () => {
       params: [{ chainId: ethers.utils.hexlify(localhostChainId) }],
     })
   }, [provider])
+
   return {
     hasProvider,
     chainId,
