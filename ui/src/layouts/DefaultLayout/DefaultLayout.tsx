@@ -1,4 +1,4 @@
-import type { VFC, ReactNode } from 'react'
+import type { ReactNode, VFC } from 'react'
 
 import AppHeader from '~/components/AppHeader'
 

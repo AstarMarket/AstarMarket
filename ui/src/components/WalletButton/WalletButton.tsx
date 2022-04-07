@@ -1,71 +1,64 @@
-import { useEffect, useState, VFC } from 'react'
+import { VFC } from 'react'
 
-import { useWalletMutators, useWalletState } from '~/state/wallet'
+import { useMetaMask } from '~/hooks/useMetaMask'
 
 const WalletButton: VFC = () => {
-  const wallet = useWalletState()
-  const { setWallet } = useWalletMutators()
-  const [connected, setConnected] = useState(false)
-
-  useEffect(() => {
-    setConnected(wallet.length > 0)
-    if (window.ethereum) {
-      window.ethereum.on('accountsChanged', (accounts: any) => {
-        if (accounts.length > 0) setWallet(accounts[0])
-      })
-      window.ethereum.on('chainChanged', () => {
-        window.location.reload()
-      })
-    }
-  }, [wallet, setWallet])
-
-  const connect = async () => {
-    if (window.ethereum) {
-      try {
-        const result = await window.ethereum.request<string[]>({
-          method: 'eth_requestAccounts',
-        })
-        if (result?.[0]) setWallet(result[0])
-      } catch (e) {
-        console.log(e)
-      }
-    }
-  }
-
-  const disconnect = () => {
-    setWallet('')
-  }
-
-  const connectWalletButton = () => {
+  const {
+    hasProvider,
+    account,
+    connectAccount,
+    isShibuyaNetwork,
+    isLocalhostNetwork,
+    switchToShibuya,
+    switchToLocalhost,
+    isLoadingChainId,
+  } = useMetaMask()
+  if (isLoadingChainId) return null
+  if (!hasProvider)
     return (
-      <button
-        className="btn btn-info text-white rounded-full"
-        onClick={() => connect()}
+      <a
+        href="https://chrome.google.com/webstore/detail/metamask/nkbihfbeogaeaoehlefnkodbefgpgknn"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="btn btn-error text-white rounded-full"
       >
-        Connect Wallet
-      </button>
+        Please install MetaMask
+      </a>
     )
-  }
-
-  const walletDropdown = () => {
-    return (
-      <div className="dropdown dropdown-end">
-        <label tabIndex={0} className="btn btn-info text-white rounded-full">
-          {wallet.slice(0, 6) + '...' + wallet.slice(-4)}
-        </label>
-        <ul
-          tabIndex={0}
-          className="menu dropdown-content p-2 shadow bg-base-100 rounded-box w-52 mt-4"
-        >
-          <li>
-            <a onClick={() => disconnect()}>Disconnect</a>
-          </li>
-        </ul>
-      </div>
-    )
-  }
-
-  return <>{connected ? walletDropdown() : connectWalletButton()}</>
+  return (
+    <>
+      {isShibuyaNetwork || isLocalhostNetwork ? (
+        account ? (
+          <div className="bg-accent px-4 py-3 text-white rounded-full">
+            {`${account?.slice(0, 6)}...${account?.slice(-4)}`}
+          </div>
+        ) : (
+          <button
+            className="btn btn-info text-white rounded-full"
+            onClick={() => connectAccount()}
+          >
+            Connect Wallet
+          </button>
+        )
+      ) : (
+        <div className="flex gap-3">
+          <button
+            className="btn btn-error text-white rounded-full"
+            onClick={() => switchToShibuya()}
+          >
+            Switch to Shibuya
+          </button>
+          {/* TODO: 様子を見て削除する */}
+          <button
+            className="btn btn-warning text-white rounded-full"
+            onClick={() => switchToLocalhost()}
+          >
+            Switch to Localhost
+          </button>
+        </div>
+      )}
+    </>
+  )
 }
 
 export default WalletButton
