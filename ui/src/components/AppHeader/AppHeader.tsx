@@ -13,10 +13,10 @@ const AppHeader: VFC = () => {
         <Link href="/">
           <a className="text-2xl font-bold mr-5">DEMO</a>
         </Link>
-        <Link href="/markets/new">
-          <a className="text-info">Add market</a>
-        </Link>
-        <span className="ml-auto">
+        <span className="ml-auto flex items-center gap-5">
+          <Link href="/markets/new">
+            <a className="btn btn-outline">Add market</a>
+          </Link>
           <WalletButton />
         </span>
       </div>
