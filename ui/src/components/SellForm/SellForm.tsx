@@ -16,11 +16,7 @@ const SellForm: VFC<Props> = ({ market }) => {
   async function handleSell(e: FormEvent<HTMLFormElement>, market: Market) {
     try {
       e.preventDefault()
-      if (isProcessingSell) return
-      if (!account) {
-        alert('Please connect your account with MetaMask.')
-        return
-      }
+      if (isProcessingSell || !account) return
       setIsProcessingSell(true)
       const contractClient = new ContractClient(window)
       await contractClient.sell(market.contract, account)
