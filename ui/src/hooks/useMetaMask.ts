@@ -1,26 +1,26 @@
 import type { MetaMaskInpageProvider } from '@metamask/providers'
 import { ethers } from 'ethers'
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 
 import { localhostChainId, shibuyaChainId } from '~/constants'
 
 export const useMetaMask = () => {
   const [provider, setProvider] = useState<MetaMaskInpageProvider | null>(null)
-  const [hasProvider, setHasProvider] = useState(false)
   const [isShibuyaNetwork, setIsShibuyaNetwork] = useState(false)
   const [isLocalhostNetwork, setIsLocalhostNetwork] = useState(false)
   const [chainId, setChainId] = useState<number | null>(null)
   const [account, setAccount] = useState<string | null>(null)
   const [isLoadingChainId, setIsLoadingChainId] = useState(false)
   const [isLoadingAccount, setIsLoadingAccount] = useState(false)
+  const hasProvider = useMemo(() => !!provider, [provider])
 
   useEffect(() => {
-    if (!window?.ethereum) {
-      setHasProvider(!!provider)
-      return
-    }
-    setProvider(window.ethereum)
-    setHasProvider(!!window.ethereum)
+    // @ts-expect-error
+    const metaMaskProvider = window?.ethereum?.providers?.find(
+      (p: any) => p.isMetaMask
+    )
+    if (!metaMaskProvider) return
+    setProvider(metaMaskProvider)
 
     function handleChainChanged(_chainId: any) {
       setIsLoadingChainId(true)
@@ -37,12 +37,12 @@ export const useMetaMask = () => {
       setIsLoadingAccount(false)
     }
 
-    window.ethereum.on('chainChanged', handleChainChanged)
-    window.ethereum.on('accountsChanged', handleAccountsChanged)
+    metaMaskProvider.on('chainChanged', handleChainChanged)
+    metaMaskProvider.on('accountsChanged', handleAccountsChanged)
     return () => {
-      if (window?.ethereum?.off) {
-        window.ethereum.off('chainChanged', handleChainChanged)
-        window.ethereum.off('accountsChanged', handleAccountsChanged)
+      if (metaMaskProvider?.off) {
+        metaMaskProvider.off('chainChanged', handleChainChanged)
+        metaMaskProvider.off('accountsChanged', handleAccountsChanged)
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
