@@ -26,6 +26,8 @@ const BuyForm: VFC<Props> = (props) => {
     try {
       await contractClient.buy(props.market.contract, account, vote, buyPrice)
       setIsBuySuccess(true)
+      alert('The purchase process has been completed.')
+      window.location.reload()
     } catch (error) {
       console.error(error)
     } finally {

@@ -33,7 +33,8 @@ export default function Index({
   useEffect(() => {
     async function check() {
       // TODO: localhost の処理に関する条件分岐を追加
-      if (!account || !market || !isShibuyaNetwork || !isLocalhostNetwork) {
+      const isCorrectNetwork = isShibuyaNetwork || isLocalhostNetwork
+      if (!account || !market || !isCorrectNetwork) {
         return
       }
       try {
