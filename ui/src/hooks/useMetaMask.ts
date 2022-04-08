@@ -16,9 +16,9 @@ export const useMetaMask = () => {
 
   useEffect(() => {
     // @ts-expect-error
-    const metaMaskProvider = window?.ethereum?.providers?.find(
-      (p: any) => p.isMetaMask
-    )
+    const metaMaskProvider =
+      window?.ethereum?.providers?.find((p: any) => p.isMetaMask) ??
+      window?.ethereum
     if (!metaMaskProvider) return
     setProvider(metaMaskProvider)
 
