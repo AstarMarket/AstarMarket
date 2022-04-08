@@ -15,10 +15,14 @@ export const useMetaMask = () => {
   const hasProvider = useMemo(() => !!provider, [provider])
 
   useEffect(() => {
-    // @ts-expect-error
     const metaMaskProvider =
-      window?.ethereum?.providers?.find((p: any) => p.isMetaMask) ??
-      window?.ethereum
+      // @ts-expect-error
+      window?.ethereum?.providers?.find((p: any) => p.isMetaMask)
+        ? // @ts-expect-error
+          window?.ethereum?.providers?.find((p: any) => p.isMetaMask)
+        : window?.ethereum?.isMetaMask
+        ? window?.ethereum
+        : null
     if (!metaMaskProvider) return
     setProvider(metaMaskProvider)
 
