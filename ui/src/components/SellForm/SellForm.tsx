@@ -25,6 +25,7 @@ const SellForm: VFC<Props> = ({ market }) => {
         hash: res.hash,
         action: 'Sell',
         marketId: market.id,
+        account,
       })
       alert('The sell has been completed.')
       window.location.reload()

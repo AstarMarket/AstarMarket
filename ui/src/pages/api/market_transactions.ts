@@ -10,22 +10,23 @@ export default async function transactions(
 ) {
   switch (req.method) {
     case 'POST': {
-      type PostData = {
+      type BuyPostData = {
+        action: 'Buy'
         hash: string
+        marketId: string
         account: string
         amount: string
-        action: MarketAction
         vote: Vote
-        marketId: string
       }
-      const {
-        hash = '',
-        account,
-        amount,
-        action,
-        vote,
-        marketId = '',
-      } = req.body as PostData
+      type SellPostData = {
+        action: 'Sell'
+        hash: string
+        marketId: string
+        account: string
+      }
+      const { hash, action, account, marketId } = req.body as
+        | BuyPostData
+        | SellPostData
       const market = await prisma.market.findUnique({ where: { id: marketId } })
       if (!market) {
         return res.status(400).json({ message: 'Market not found.' })
@@ -50,6 +51,7 @@ export default async function transactions(
         })
         return res.status(200).json(result)
       }
+      const { amount, vote } = req.body as BuyPostData
       const result = await prisma.marketTransaction.create({
         data: {
           hash,
