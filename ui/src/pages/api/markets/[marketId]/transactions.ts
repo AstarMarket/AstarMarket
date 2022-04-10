@@ -12,6 +12,7 @@ export default async function marketsMarketIdTransactions(
       const marketId = `${req.query.marketId}`
       const result = await prisma.marketTransaction.findMany({
         where: { marketId },
+        orderBy: { createdAt: 'desc' },
       })
       return res.status(200).json(result)
     }

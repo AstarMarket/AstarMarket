@@ -25,7 +25,7 @@ const TransactionHistory: VFC<Props> = ({ marketId }) => {
         if (isLoadingHistory) return
         setIsLoadingHistory(true)
         const transactions = await api.getMarketsMarketIdTransactions(marketId)
-        setMarketTransactions(transactions.reverse())
+        setMarketTransactions(transactions)
       } catch (error) {
         console.error(error)
       } finally {
