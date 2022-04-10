@@ -11,9 +11,11 @@ type Props = {
   marketId: string
 }
 
-const MarketHistory: VFC<Props> = ({ marketId }) => {
+const TransactionHistory: VFC<Props> = ({ marketId }) => {
   dayjs.extend(utc)
-  const [history, setHistory] = useState<MarketTransaction[]>([])
+  const [marketTransactions, setMarketTransactions] = useState<
+    MarketTransaction[]
+  >([])
   const [isLoadingHistory, setIsLoadingHistory] = useState(false)
   const { hasProvider } = useMetaMask()
 
@@ -23,7 +25,7 @@ const MarketHistory: VFC<Props> = ({ marketId }) => {
         if (isLoadingHistory) return
         setIsLoadingHistory(true)
         const transactions = await api.getMarketsMarketIdTransactions(marketId)
-        setHistory(transactions.reverse())
+        setMarketTransactions(transactions.reverse())
       } catch (error) {
         console.error(error)
       } finally {
@@ -37,8 +39,8 @@ const MarketHistory: VFC<Props> = ({ marketId }) => {
 
   if (isLoadingHistory) return <div className="animate-pulse">Loading...</div>
   if (!hasProvider)
-    return <div>Please install MetaMask to show the market history.</div>
-  if (history.length === 0) return <div>No trading history.</div>
+    return <div>Please install MetaMask to show the market transactions.</div>
+  if (marketTransactions.length === 0) return <div>No market transactions.</div>
   return (
     <table className="table border">
       <thead>
@@ -52,27 +54,27 @@ const MarketHistory: VFC<Props> = ({ marketId }) => {
         </tr>
       </thead>
       <tbody>
-        {history.map((historyItem) => {
+        {marketTransactions.map((marketTransaction) => {
           return (
-            <tr key={historyItem.id}>
-              <th>{truncate(historyItem.account)}</th>
-              <td className="capitalize">{historyItem.action}</td>
-              <td>{historyItem.vote}</td>
-              <td>{historyItem.amount} SBY</td>
+            <tr key={marketTransaction.id}>
+              <th>{truncate(marketTransaction.account)}</th>
+              <td className="capitalize">{marketTransaction.action}</td>
+              <td>{marketTransaction.vote}</td>
+              <td>{marketTransaction.amount} SBY</td>
               <td>
                 {dayjs
-                  .utc(historyItem.createdAt)
+                  .utc(marketTransaction.createdAt)
                   .local()
                   .format('YYYY/MM/DD hh:mm:ss')}
               </td>
               <td>
                 <a
-                  href={`${process.env.SHIBUYA_SUBSCAN_URL}/tx/${historyItem.hash}`}
+                  href={`${process.env.SHIBUYA_SUBSCAN_URL}/tx/${marketTransaction.hash}`}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-blue-500 underline"
                 >
-                  {truncate(historyItem.hash)}
+                  {truncate(marketTransaction.hash)}
                 </a>
               </td>
             </tr>
@@ -83,4 +85,4 @@ const MarketHistory: VFC<Props> = ({ marketId }) => {
   )
 }
 
-export default MarketHistory
+export default TransactionHistory

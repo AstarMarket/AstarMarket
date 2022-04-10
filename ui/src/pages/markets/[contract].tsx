@@ -5,8 +5,8 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 import BuyForm from '~/components/BuyForm'
-import MarketHistory from '~/components/MarketHistory'
 import SellForm from '~/components/SellForm'
+import TransactionHistory from '~/components/TransactionHistory'
 import { useMetaMask } from '~/hooks/useMetaMask'
 import ContractClient from '~/lib/contractClient'
 import { prisma } from '~/lib/prisma'
@@ -91,7 +91,7 @@ export default function Index({
         )}
       </div>
       <div className="mt-5">
-        <MarketHistory marketId={market.id} />
+        <TransactionHistory marketId={market.id} />
       </div>
     </div>
   )
