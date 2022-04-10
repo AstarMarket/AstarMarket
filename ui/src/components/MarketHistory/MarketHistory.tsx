@@ -35,7 +35,6 @@ const MarketHistory: VFC<Props> = ({ marketId }) => {
             const transaction = await contractClient.provider.getTransaction(
               hash
             )
-            console.log(transaction)
             const account = transaction.from
             const amount = ethers.utils.formatEther(transaction.value)
             const action =
