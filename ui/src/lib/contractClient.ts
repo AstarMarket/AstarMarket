@@ -1,10 +1,11 @@
+import type { TransactionResponse } from '@ethersproject/abstract-provider'
 import type { BigNumber } from 'ethers'
 import { ethers } from 'ethers'
 
 import PredictionMarketConstruct from '~/contracts/construct/PredictionMarket'
 
 class ContractClient {
-  private provider
+  public provider
   private factory
 
   constructor(window: any) {
@@ -36,8 +37,12 @@ class ContractClient {
       from: currentAccountAddress,
       value: ethers.utils.parseEther(price),
     }
-    const buyTxn = await contract.functions.buy(vote, overrides)
+    const buyTxn = (await contract.functions.buy(
+      vote,
+      overrides
+    )) as TransactionResponse
     await buyTxn.wait()
+    return buyTxn
   }
 
   public getPosition = async (
@@ -68,8 +73,11 @@ class ContractClient {
       from: currentAccountAddress,
       gasLimit: 100000, // 現状、適当な値で妥当性があるか不明
     }
-    const sellTxn = await contract.functions.sell(overrides)
+    const sellTxn = (await contract.functions.sell(
+      overrides
+    )) as TransactionResponse
     await sellTxn.wait()
+    return sellTxn
   }
 }
 

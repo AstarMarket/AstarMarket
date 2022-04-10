@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 import BuyForm from '~/components/BuyForm'
+import MarketHistory from '~/components/MarketHistory'
 import SellForm from '~/components/SellForm'
 import { useMetaMask } from '~/hooks/useMetaMask'
 import ContractClient from '~/lib/contractClient'
@@ -89,6 +90,9 @@ export default function Index({
         ) : (
           <SellForm market={market} />
         )}
+      </div>
+      <div className="mt-5">
+        <MarketHistory marketId={market.id} />
       </div>
     </div>
   )

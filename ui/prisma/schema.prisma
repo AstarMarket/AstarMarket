@@ -11,9 +11,19 @@ datasource db {
 }
 
 model Market {
+  id           String              @id @default(cuid())
+  title        String              @db.VarChar(100)
+  contract     String              @db.VarChar(100)
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  transactions MarketTransaction[]
+}
+
+model MarketTransaction {
   id        String   @id @default(cuid())
-  title     String   @db.VarChar(100)
-  contract  String   @db.VarChar(100)
+  hash      String   @db.VarChar(100)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
+  marketId  String
+  market    Market   @relation(fields: [marketId], references: [id])
 }
