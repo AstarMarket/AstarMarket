@@ -21,7 +21,11 @@ const SellForm: VFC<Props> = ({ market }) => {
       setIsProcessingSell(true)
       const contractClient = new ContractClient(window)
       const res = await contractClient.sell(market.contract, account)
-      await api.postMarketTransactions({ hash: res.hash, marketId: market.id })
+      await api.postMarketTransactions({
+        hash: res.hash,
+        action: 'Sell',
+        marketId: market.id,
+      })
       alert('The sell has been completed.')
       window.location.reload()
     } catch (error) {

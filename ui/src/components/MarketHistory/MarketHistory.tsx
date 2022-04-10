@@ -1,27 +1,19 @@
-import { ethers } from 'ethers'
+import type { MarketTransaction } from '@prisma/client'
+import dayjs from 'dayjs'
+import utc from 'dayjs/plugin/utc'
 import { useEffect, useState, VFC } from 'react'
 
 import { useMetaMask } from '~/hooks/useMetaMask'
-import ContractClient from '~/lib/contractClient'
 import { truncate } from '~/lib/text'
 import * as api from '~/services'
-import { Vote } from '~/types/vote'
 
 type Props = {
   marketId: string
 }
 
 const MarketHistory: VFC<Props> = ({ marketId }) => {
-  type HistoryItem = {
-    id: string
-    account: string
-    action: 'buy' | 'sell'
-    vote: Vote
-    amount: string
-    date: Date
-    hash: string
-  }
-  const [history, setHistory] = useState<HistoryItem[]>([])
+  dayjs.extend(utc)
+  const [history, setHistory] = useState<MarketTransaction[]>([])
   const [isLoadingHistory, setIsLoadingHistory] = useState(false)
   const { hasProvider } = useMetaMask()
 
@@ -31,45 +23,7 @@ const MarketHistory: VFC<Props> = ({ marketId }) => {
         if (isLoadingHistory) return
         setIsLoadingHistory(true)
         const transactions = await api.getMarketsMarketIdTransactions(marketId)
-        const contractClient = new ContractClient(window)
-        const buyerMap = new Map<string, [string, Vote]>()
-        const history = await Promise.all(
-          transactions.map(async ({ id, hash, createdAt }) => {
-            const transaction = await contractClient.provider.getTransaction(
-              hash
-            )
-            const account = transaction.from
-            const amount = ethers.utils.formatEther(transaction.value)
-            const action =
-              amount === '0.0' ? ('sell' as const) : ('buy' as const)
-            const vote =
-              action === 'buy'
-                ? transaction.data.split('').reverse()[0] === '0'
-                  ? Vote.Yes
-                  : Vote.No
-                : Vote.Yes // 仮の値
-            let updatedAmount = amount
-            let updatedVote = vote
-            if (action === 'buy') {
-              buyerMap.set(account, [amount, vote])
-            } else if (action === 'sell') {
-              updatedAmount = buyerMap.get(account)?.[0] ?? '0.0'
-              updatedVote = buyerMap.get(account)?.[1] ?? Vote.Yes
-              buyerMap.delete(account)
-            }
-            const date = new Date(createdAt)
-            return {
-              id,
-              account,
-              action,
-              vote: updatedVote,
-              amount: updatedAmount,
-              date,
-              hash,
-            }
-          })
-        )
-        setHistory(history.reverse())
+        setHistory(transactions.reverse())
       } catch (error) {
         console.error(error)
       } finally {
@@ -103,9 +57,14 @@ const MarketHistory: VFC<Props> = ({ marketId }) => {
             <tr key={historyItem.id}>
               <th>{truncate(historyItem.account)}</th>
               <td className="capitalize">{historyItem.action}</td>
-              <td>{Vote[historyItem.vote]}</td>
+              <td>{historyItem.vote}</td>
               <td>{historyItem.amount} SBY</td>
-              <td>{historyItem.date.toLocaleString()}</td>
+              <td>
+                {dayjs
+                  .utc(historyItem.createdAt)
+                  .local()
+                  .format('YYYY/MM/DD hh:mm:ss')}
+              </td>
               <td>
                 <a
                   href={`${process.env.SHIBUYA_SUBSCAN_URL}/tx/${historyItem.hash}`}

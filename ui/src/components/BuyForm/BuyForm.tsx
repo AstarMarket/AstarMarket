@@ -33,6 +33,10 @@ const BuyForm: VFC<Props> = (props) => {
       )
       await api.postMarketTransactions({
         hash: res.hash,
+        account,
+        amount: buyPrice,
+        vote: isCheckedYes ? 'Yes' : 'No',
+        action: 'Buy',
         marketId: props.market.id,
       })
       setIsBuySuccess(true)
