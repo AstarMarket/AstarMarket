@@ -1,6 +1,7 @@
 import { ethers } from 'ethers'
 import { useEffect, useState, VFC } from 'react'
 
+import { useMetaMask } from '~/hooks/useMetaMask'
 import ContractClient from '~/lib/contractClient'
 import * as api from '~/services'
 import { Vote } from '~/types/vote'
@@ -21,6 +22,7 @@ const MarketHistory: VFC<Props> = ({ marketId }) => {
   }
   const [history, setHistory] = useState<HistoryItem[]>([])
   const [isLoadingHistory, setIsLoadingHistory] = useState(false)
+  const { hasProvider } = useMetaMask()
 
   useEffect(() => {
     async function init() {
@@ -73,12 +75,14 @@ const MarketHistory: VFC<Props> = ({ marketId }) => {
         setIsLoadingHistory(false)
       }
     }
-    if (!marketId || !window) return
+    if (!marketId || !hasProvider) return
     init()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [marketId])
+  }, [marketId, hasProvider])
 
   if (isLoadingHistory) return <div className="animate-pulse">Loading...</div>
+  if (!hasProvider)
+    return <div>Please install MetaMask to show the market history.</div>
   if (history.length === 0) return <div>No trading history.</div>
   return (
     <table className="table border">
