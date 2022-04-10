@@ -32,7 +32,7 @@ export default async function transactions(
       }
       if (action === 'Sell') {
         const buyTransactions = await prisma.marketTransaction.findMany({
-          where: { marketId },
+          where: { marketId, account },
           orderBy: {
             createdAt: 'desc',
           },
