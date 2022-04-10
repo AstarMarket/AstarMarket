@@ -10,6 +10,7 @@ import SellForm from '~/components/SellForm'
 import { useMetaMask } from '~/hooks/useMetaMask'
 import ContractClient from '~/lib/contractClient'
 import { prisma } from '~/lib/prisma'
+import { truncate } from '~/lib/text'
 
 type ServerSideProps = {
   market: Market | null
@@ -75,9 +76,7 @@ export default function Index({
                 target="_blank"
                 rel="noreferrer noopener"
               >
-                {`${market.contract.slice(0, 6)}...${market.contract.slice(
-                  -4
-                )}`}
+                {truncate(market.contract)}
               </a>
             </Link>
           </p>

@@ -3,6 +3,7 @@ import { useEffect, useState, VFC } from 'react'
 
 import { useMetaMask } from '~/hooks/useMetaMask'
 import ContractClient from '~/lib/contractClient'
+import { truncate } from '~/lib/text'
 import * as api from '~/services'
 import { Vote } from '~/types/vote'
 
@@ -100,12 +101,7 @@ const MarketHistory: VFC<Props> = ({ marketId }) => {
         {history.map((historyItem) => {
           return (
             <tr key={historyItem.id}>
-              <th>
-                {`${historyItem.account.slice(
-                  0,
-                  6
-                )}...${historyItem.account.slice(-4)}`}
-              </th>
+              <th>{truncate(historyItem.account)}</th>
               <td className="capitalize">{historyItem.action}</td>
               <td>{Vote[historyItem.vote]}</td>
               <td>{historyItem.amount} SBY</td>
@@ -117,9 +113,7 @@ const MarketHistory: VFC<Props> = ({ marketId }) => {
                   rel="noopener noreferrer"
                   className="text-blue-500 underline"
                 >
-                  {`${historyItem.hash.slice(0, 6)}...${historyItem.hash.slice(
-                    -4
-                  )}`}
+                  {truncate(historyItem.hash)}
                 </a>
               </td>
             </tr>
