@@ -57,3 +57,7 @@ VSCode を推奨します。推奨する拡張機能については、`../.vscod
   "eslint.workingDirectories": ["./ui"]
 }
 ```
+
+## デプロイ
+
+`main`ブランチにマージされ次第、自動的に Heroku 上にデプロイされます。
