@@ -3,7 +3,6 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import { useEffect, useState, VFC } from 'react'
 
-import { useMetaMask } from '~/hooks/useMetaMask'
 import { truncate } from '~/lib/text'
 import * as api from '~/services'
 
@@ -17,7 +16,6 @@ const TransactionHistory: VFC<Props> = ({ marketId }) => {
     MarketTransaction[]
   >([])
   const [isLoadingHistory, setIsLoadingHistory] = useState(false)
-  const { hasProvider } = useMetaMask()
 
   useEffect(() => {
     async function init() {
@@ -32,14 +30,12 @@ const TransactionHistory: VFC<Props> = ({ marketId }) => {
         setIsLoadingHistory(false)
       }
     }
-    if (!marketId || !hasProvider) return
+    if (!marketId) return
     init()
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [marketId, hasProvider])
+  }, [marketId])
 
   if (isLoadingHistory) return <div className="animate-pulse">Loading...</div>
-  if (!hasProvider)
-    return <div>Please install MetaMask to show the market transactions.</div>
   if (marketTransactions.length === 0) return <div>No market transactions.</div>
   return (
     <table className="table border">
