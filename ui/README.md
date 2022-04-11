@@ -57,3 +57,17 @@ VSCode を推奨します。推奨する拡張機能については、`../.vscod
   "eslint.workingDirectories": ["./ui"]
 }
 ```
+
+## デプロイ
+
+[Heroku CLI](https://devcenter.heroku.com/ja/articles/heroku-cli) を使います。各種設定は以下の PR を参考にしてください。
+
+[Heroku 構築 by y-temp4 · Pull Request #33 · AstarMarket/AstarMarket](https://github.com/AstarMarket/AstarMarket/pull/33)
+
+```shell
+$ heroku login
+
+# 各種設定を行う
+
+$ git push heroku main
+```
