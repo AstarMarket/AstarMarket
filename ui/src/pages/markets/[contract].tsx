@@ -90,7 +90,7 @@ export default function Index({
           <SellForm market={market} />
         )}
       </div>
-      <div className="mt-5">
+      <div className="mt-8">
         <TransactionHistory marketId={market.id} />
       </div>
     </div>

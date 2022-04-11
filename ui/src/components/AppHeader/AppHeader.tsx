@@ -11,7 +11,7 @@ const AppHeader: VFC = () => {
         style={{ minHeight: '96px' }}
       >
         <Link href="/">
-          <a className="text-2xl font-bold mr-5">DEMO</a>
+          <a className="text-2xl font-bold mr-5">Astar Market</a>
         </Link>
         <span className="ml-auto flex items-center gap-5">
           <Link href="/markets/new">
