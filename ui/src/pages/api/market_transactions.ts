@@ -1,4 +1,4 @@
-import type { MarketAction, Vote } from '@prisma/client'
+import type { Vote } from '@prisma/client'
 import { PrismaClient } from '@prisma/client'
 import type { NextApiRequest, NextApiResponse } from 'next'
 

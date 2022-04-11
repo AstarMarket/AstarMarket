@@ -5,12 +5,14 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 import BuyForm from '~/components/BuyForm'
+import MarketRatioBars from '~/components/MarketRatioBars/MarketRatioBars'
 import SellForm from '~/components/SellForm'
 import TransactionHistory from '~/components/TransactionHistory'
 import { useMetaMask } from '~/hooks/useMetaMask'
 import ContractClient from '~/lib/contractClient'
 import { prisma } from '~/lib/prisma'
 import { truncate } from '~/lib/text'
+import * as api from '~/services'
 
 type ServerSideProps = {
   market: Market | null
@@ -83,7 +85,7 @@ export default function Index({
         </div>
       </div>
       <div className="mt-8 grid grid-cols-3 gap-4">
-        <div className="col-span-2 border rounded p-5"></div>
+        <MarketRatioBars />
         {!hasAlreadyBought ? (
           <BuyForm market={market} />
         ) : (
