@@ -37,7 +37,7 @@ const SellForm: VFC<Props> = ({ market }) => {
   }
   return (
     <form
-      className="border rounded p-5"
+      className="border rounded p-5 h-72"
       onSubmit={(e) => handleSell(e, market)}
     >
       <div className="mb-4">
