@@ -49,13 +49,14 @@ const WalletButton: VFC = () => {
           >
             Switch to Shibuya
           </button>
-          {/* TODO: 様子を見て削除する */}
-          <button
-            className="btn btn-warning text-white rounded-full"
-            onClick={() => switchToLocalhost()}
-          >
-            Switch to Localhost
-          </button>
+          {process.env.NODE_ENV === 'development' && (
+            <button
+              className="btn btn-warning text-white rounded-full"
+              onClick={() => switchToLocalhost()}
+            >
+              Switch to Localhost
+            </button>
+          )}
         </div>
       )}
     </>
