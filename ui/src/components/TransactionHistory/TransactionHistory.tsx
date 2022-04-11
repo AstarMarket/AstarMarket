@@ -35,49 +35,80 @@ const TransactionHistory: VFC<Props> = ({ marketId }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [marketId])
 
-  if (isLoadingHistory) return <div className="animate-pulse">Loading...</div>
-  if (marketTransactions.length === 0) return <div>No market transactions.</div>
   return (
-    <table className="table border">
-      <thead>
-        <tr>
-          <th>Account</th>
-          <th>Action</th>
-          <th>Vote</th>
-          <th>Amount</th>
-          <th>Date</th>
-          <th>Hash</th>
-        </tr>
-      </thead>
-      <tbody>
-        {marketTransactions.map((marketTransaction) => {
-          return (
-            <tr key={marketTransaction.id}>
-              <th>{truncate(marketTransaction.account)}</th>
-              <td className="capitalize">{marketTransaction.action}</td>
-              <td>{marketTransaction.vote}</td>
-              <td>{marketTransaction.amount} SBY</td>
-              <td>
-                {dayjs
-                  .utc(marketTransaction.createdAt)
-                  .local()
-                  .format('YYYY/MM/DD hh:mm:ss')}
+    <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+      <table className="w-full min-w-full divide-y divide-gray-300">
+        <thead className="bg-gray-50">
+          <tr>
+            <th className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-14">
+              Account
+            </th>
+            <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+              Action
+            </th>
+            <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+              Vote
+            </th>
+            <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+              Amount
+            </th>
+            <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+              Date
+            </th>
+            <th className="px-3 py-3.5 text-left text-sm font-semibold text-gray-900">
+              Hash
+            </th>
+          </tr>
+        </thead>
+        <tbody className="divide-y divide-gray-200 bg-white">
+          {marketTransactions.length == 0 ? (
+            <tr>
+              <td className="text-center whitespace-nowrap px-3 py-4 text-sm text-gray-500"></td>
+              <td className="text-center whitespace-nowrap px-3 py-4 text-sm text-gray-500"></td>
+              <td className="text-center whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                No Data
               </td>
-              <td>
-                <a
-                  href={`${process.env.SHIBUYA_SUBSCAN_URL}/tx/${marketTransaction.hash}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="text-blue-500 underline"
-                >
-                  {truncate(marketTransaction.hash)}
-                </a>
-              </td>
+              <td className="text-center whitespace-nowrap px-3 py-4 text-sm text-gray-500"></td>
             </tr>
-          )
-        })}
-      </tbody>
-    </table>
+          ) : (
+            marketTransactions.map((marketTransaction) => {
+              return (
+                <tr key={marketTransaction.id}>
+                  <th className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-gray-900 sm:pl-14">
+                    {truncate(marketTransaction.account)}
+                  </th>
+                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500 capitalize">
+                    {marketTransaction.action}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {marketTransaction.vote}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {marketTransaction.amount} SBY
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    {dayjs
+                      .utc(marketTransaction.createdAt)
+                      .local()
+                      .format('YYYY/MM/DD hh:mm:ss')}
+                  </td>
+                  <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
+                    <a
+                      href={`${process.env.SHIBUYA_SUBSCAN_URL}/tx/${marketTransaction.hash}`}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-500 underline"
+                    >
+                      {truncate(marketTransaction.hash)}
+                    </a>
+                  </td>
+                </tr>
+              )
+            })
+          )}
+        </tbody>
+      </table>
+    </div>
   )
 }
 
