@@ -12,7 +12,7 @@ const DefaultLayout: VFC<DefaultLayoutProps> = ({ children }) => {
       <div className="border-b">
         <AppHeader />
       </div>
-      <div className="max-w-5xl mx-auto">{children}</div>
+      <div className="max-w-5xl mx-auto pb-10">{children}</div>
     </>
   )
 }

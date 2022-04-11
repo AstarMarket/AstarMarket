@@ -4,6 +4,7 @@ import { useState, VFC } from 'react'
 
 import { useMetaMask } from '~/hooks/useMetaMask'
 import ContractClient from '~/lib/contractClient'
+import * as api from '~/services'
 
 interface Props {
   market: Market
@@ -19,7 +20,13 @@ const SellForm: VFC<Props> = ({ market }) => {
       if (isProcessingSell || !account) return
       setIsProcessingSell(true)
       const contractClient = new ContractClient(window)
-      await contractClient.sell(market.contract, account)
+      const res = await contractClient.sell(market.contract, account)
+      await api.postMarketTransactions({
+        hash: res.hash,
+        action: 'Sell',
+        marketId: market.id,
+        account,
+      })
       alert('The sell has been completed.')
       window.location.reload()
     } catch (error) {

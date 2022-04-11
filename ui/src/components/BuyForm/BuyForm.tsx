@@ -3,6 +3,7 @@ import { FormEvent, useState, VFC } from 'react'
 
 import { useMetaMask } from '~/hooks/useMetaMask'
 import ContractClient from '~/lib/contractClient'
+import * as api from '~/services'
 import { Vote } from '~/types/vote'
 
 interface Props {
@@ -24,7 +25,20 @@ const BuyForm: VFC<Props> = (props) => {
     const contractClient = new ContractClient(window)
     const vote = isCheckedYes ? Vote.Yes : Vote.No
     try {
-      await contractClient.buy(props.market.contract, account, vote, buyPrice)
+      const res = await contractClient.buy(
+        props.market.contract,
+        account,
+        vote,
+        buyPrice
+      )
+      await api.postMarketTransactions({
+        hash: res.hash,
+        account,
+        amount: buyPrice,
+        vote: isCheckedYes ? 'Yes' : 'No',
+        action: 'Buy',
+        marketId: props.market.id,
+      })
       setIsBuySuccess(true)
       alert('The purchase process has been completed.')
       window.location.reload()

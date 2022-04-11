@@ -1,6 +1,7 @@
 import { VFC } from 'react'
 
 import { useMetaMask } from '~/hooks/useMetaMask'
+import { truncate } from '~/lib/text'
 
 const WalletButton: VFC = () => {
   const {
@@ -30,7 +31,7 @@ const WalletButton: VFC = () => {
       {isShibuyaNetwork || isLocalhostNetwork ? (
         account ? (
           <div className="bg-accent px-4 py-3 text-white rounded-full">
-            {`${account?.slice(0, 6)}...${account?.slice(-4)}`}
+            {truncate(account)}
           </div>
         ) : (
           <button

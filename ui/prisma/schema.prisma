@@ -11,9 +11,33 @@ datasource db {
 }
 
 model Market {
-  id        String   @id @default(cuid())
-  title     String   @db.VarChar(100)
-  contract  String   @db.VarChar(100)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  id           String              @id @default(cuid())
+  title        String              @db.VarChar(100)
+  contract     String              @db.VarChar(100)
+  createdAt    DateTime            @default(now())
+  updatedAt    DateTime            @updatedAt
+  transactions MarketTransaction[]
+}
+
+model MarketTransaction {
+  id        String       @id @default(cuid())
+  hash      String       @db.VarChar(100)
+  account   String       @db.VarChar(100)
+  amount    String       @db.VarChar(100)
+  action    MarketAction @default(Buy)
+  vote      Vote         @default(Yes)
+  createdAt DateTime     @default(now())
+  updatedAt DateTime     @updatedAt
+  marketId  String
+  market    Market       @relation(fields: [marketId], references: [id])
+}
+
+enum MarketAction {
+  Buy
+  Sell
+}
+
+enum Vote {
+  Yes
+  No
 }
