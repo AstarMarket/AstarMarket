@@ -12,7 +12,6 @@ import { useMetaMask } from '~/hooks/useMetaMask'
 import ContractClient from '~/lib/contractClient'
 import { prisma } from '~/lib/prisma'
 import { truncate } from '~/lib/text'
-import * as api from '~/services'
 
 type ServerSideProps = {
   market: Market | null

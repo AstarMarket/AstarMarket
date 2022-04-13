@@ -82,7 +82,7 @@ class ContractClient {
 
   public getMarketShares = async (
     contractAddress: string,
-  ): Promise<[string, string]> => {
+  ): Promise<[BigNumber, BigNumber]> => {
     const signer = this.provider.getSigner()
     const contract = new ethers.Contract(
       contractAddress,
