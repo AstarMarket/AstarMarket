@@ -1,9 +1,26 @@
-import { useEffect, VFC } from 'react'
+import { Market } from '@prisma/client'
+import { useEffect, useState, VFC } from 'react'
 
-const MarketRatioBars: VFC = () => {
+import ContractClient from '~/lib/contractClient'
+
+interface Props {
+  market: Market
+}
+
+const MarketShares: VFC<Props> = (props) => {
+  const [yesShare, setYesShare] = useState(0)
+  const [noShare, setNoShare] = useState(0)
+
   useEffect(() => {
     async function init() {
       try {
+        const contractClient = new ContractClient(window)
+        const res = await contractClient.getMarketShares(props.market.contract)
+        console.log(Number(res[0]))
+        const yesResult = Math.round(Number(res[0]) / 10)
+        const noResult = Math.round(Number(res[1]) / 10)
+        setYesShare(yesResult)
+        setNoShare(noResult)
       } catch (error) {
         console.error(error)
       }
@@ -24,12 +41,12 @@ const MarketRatioBars: VFC = () => {
           <td className="px-4">
             <div className="flex">
               <div>Yes</div>
-              <div className="ml-auto">100%</div>
+              <div className="ml-auto">{yesShare}%</div>
             </div>
             <div className="relative mt-2 bg-gray-100 h-2 rounded-xl w-full">
               <div
                 style={{
-                  backgroundColor: '#e0bee6', width: `100%` }}
+                  backgroundColor: '#e0bee6', width: `${yesShare}%` }}
                 className="absolute rounded-xl h-2 w-20"
               ></div>
             </div>
@@ -39,11 +56,11 @@ const MarketRatioBars: VFC = () => {
           <td className="px-4">
             <div className="flex">
               <div>No</div>
-              <div className="ml-auto">0%</div>
+              <div className="ml-auto">{noShare}%</div>
             </div>
             <div className="relative mt-2 bg-gray-100 h-2 rounded-xl w-full">
               <div
-                style={{ backgroundColor: '#b2dfdb', width: `0%` }}
+                style={{ backgroundColor: '#b2dfdb', width: `${noShare}%` }}
                 className="absolute rounded-xl h-2 w-20"
               ></div>
             </div>
@@ -54,4 +71,4 @@ const MarketRatioBars: VFC = () => {
   )
 }
 
-export default MarketRatioBars
+export default MarketShares
