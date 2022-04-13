@@ -68,21 +68,31 @@ contract PredictionMarket {
     }
 
     function updateMarketInfoBySell(Vote _vote) private {
+        uint256 maxShares = 1000;
+
         if (_vote == Vote.Yes) {
             marketInfo.yesPrice -= buyers[msg.sender].amount;
             uint256 totalPrice = marketInfo.yesPrice + marketInfo.noPrice;
             if (marketInfo.yesPrice == 0) {
                 marketInfo.yesShares = 0;
+                marketInfo.noShares = maxShares;
             } else {
-                marketInfo.yesShares = (marketInfo.yesPrice / totalPrice) * 100;
+                marketInfo.yesShares = ((marketInfo.yesPrice * maxShares) /
+                    totalPrice);
+                marketInfo.noShares = ((marketInfo.noPrice * maxShares) /
+                    totalPrice);
             }
         } else {
             marketInfo.noPrice -= buyers[msg.sender].amount;
             uint256 totalPrice = marketInfo.yesPrice + marketInfo.noPrice;
             if (marketInfo.noPrice == 0) {
                 marketInfo.noShares = 0;
+                marketInfo.yesShares = maxShares;
             } else {
-                marketInfo.noShares = (marketInfo.noPrice / totalPrice) * 100;
+                marketInfo.noShares = ((marketInfo.noPrice * maxShares) /
+                    totalPrice);
+                marketInfo.yesShares = ((marketInfo.yesPrice * maxShares) /
+                    totalPrice);
             }
         }
     }

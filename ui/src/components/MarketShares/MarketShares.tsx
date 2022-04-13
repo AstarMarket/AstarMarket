@@ -16,7 +16,6 @@ const MarketShares: VFC<Props> = (props) => {
       try {
         const contractClient = new ContractClient(window)
         const res = await contractClient.getMarketShares(props.market.contract)
-        console.log(Number(res[0]))
         const yesResult = Math.round(Number(res[0]) / 10)
         const noResult = Math.round(Number(res[1]) / 10)
         setYesShare(yesResult)
