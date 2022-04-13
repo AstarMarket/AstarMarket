@@ -94,7 +94,22 @@ describe("PredictionMarket", function () {
         value: buyAmount,
       });
       const shares = await market.getMarketShares();
-      expect(shares[0]).to.be.equal(1000);
+      expect(shares[0]).to.be.equal(10000);
+      expect(shares[1]).to.be.equal(0);
+    });
+    it("returns [1000, 0] when another user buys Yes", async () => {
+      const [user1, user2] = await ethers.getSigners();
+      const buyAmount = ethers.utils.parseEther("1");
+      await market.buy(Vote.Yes, {
+        from: user1.address,
+        value: buyAmount,
+      });
+      await market.connect(user2).buy(Vote.Yes, {
+        from: user2.address,
+        value: buyAmount,
+      });
+      const shares = await market.getMarketShares();
+      expect(shares[0]).to.be.equal(10000);
       expect(shares[1]).to.be.equal(0);
     });
     it("return [0, 0] when a user sells after buy", async () => {
@@ -125,8 +140,28 @@ describe("PredictionMarket", function () {
         value: buyAmount,
       });
       const shares = await market.getMarketShares();
-      expect(shares[0]).to.be.equal(333);
-      expect(shares[1]).to.be.equal(666);
+      expect(shares[0]).to.be.equal(3333);
+      expect(shares[1]).to.be.equal(6666);
+    });
+    it("return [0, 1000] when three users action Yes(1) and No(2) and sell Yes(1)", async () => {
+      const [user, user2, user3] = await ethers.getSigners();
+      const buyAmount = ethers.utils.parseEther("1");
+      await market.buy(Vote.Yes, {
+        from: user.address,
+        value: buyAmount,
+      });
+      await market.connect(user2).buy(Vote.No, {
+        from: user2.address,
+        value: buyAmount,
+      });
+      await market.connect(user3).buy(Vote.No, {
+        from: user3.address,
+        value: buyAmount,
+      });
+      await market.sell();
+      const shares = await market.getMarketShares();
+      expect(shares[0]).to.be.equal(0);
+      expect(shares[1]).to.be.equal(10000);
     });
     it("return [500, 500] when three users action Yes(1) and No(2) and sell No(1)", async () => {
       const [user, user2, user3] = await ethers.getSigners();
@@ -145,8 +180,8 @@ describe("PredictionMarket", function () {
       });
       await market.connect(user3).sell();
       const shares = await market.getMarketShares();
-      expect(shares[0]).to.be.equal(500);
-      expect(shares[1]).to.be.equal(500);
+      expect(shares[0]).to.be.equal(5000);
+      expect(shares[1]).to.be.equal(5000);
     });
     it("return [990, 10] when the percentage of 'yes' is too large", async () => {
       const [user, user2] = await ethers.getSigners();
@@ -161,8 +196,8 @@ describe("PredictionMarket", function () {
         value: buyAmount2,
       });
       const shares = await market.getMarketShares();
-      expect(shares[0]).to.be.equal(990);
-      expect(shares[1]).to.be.equal(10);
+      expect(shares[0]).to.be.equal(9990);
+      expect(shares[1]).to.be.equal(9);
     });
   });
 });

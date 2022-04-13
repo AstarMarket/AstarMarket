@@ -32,7 +32,7 @@ contract PredictionMarket {
     constructor() {}
 
     function updateMarketInfoByBuy(Vote _vote) private {
-        uint256 maxShares = 1000;
+        uint256 maxShares = 10000;
 
         if (marketInfo.yesShares == 0 && marketInfo.noShares == 0) {
             if (_vote == Vote.Yes) {
@@ -56,44 +56,39 @@ contract PredictionMarket {
         // round off on front end
         marketInfo.yesShares = ((marketInfo.yesPrice * maxShares) / totalPrice);
         marketInfo.noShares = ((marketInfo.noPrice * maxShares) / totalPrice);
-
-        if (marketInfo.yesShares >= (maxShares - 10)) {
-            marketInfo.yesShares = maxShares - 10;
-            marketInfo.noShares = 10;
-        }
-        if (marketInfo.noShares >= (maxShares - 10)) {
-            marketInfo.noShares = maxShares - 10;
-            marketInfo.yesShares = 10;
-        }
     }
 
     function updateMarketInfoBySell(Vote _vote) private {
-        uint256 maxShares = 1000;
+        uint256 maxShares = 10000;
 
         if (_vote == Vote.Yes) {
             marketInfo.yesPrice -= buyers[msg.sender].amount;
             uint256 totalPrice = marketInfo.yesPrice + marketInfo.noPrice;
             if (marketInfo.yesPrice == 0) {
                 marketInfo.yesShares = 0;
-                marketInfo.noShares = maxShares;
-            } else {
-                marketInfo.yesShares = ((marketInfo.yesPrice * maxShares) /
-                    totalPrice);
-                marketInfo.noShares = ((marketInfo.noPrice * maxShares) /
-                    totalPrice);
+                if (marketInfo.noPrice != 0) {
+                    marketInfo.noShares = maxShares;
+                }
+                return;
             }
+            marketInfo.yesShares = ((marketInfo.yesPrice * maxShares) /
+                totalPrice);
+            marketInfo.noShares = ((marketInfo.noPrice * maxShares) /
+                totalPrice);
         } else {
             marketInfo.noPrice -= buyers[msg.sender].amount;
             uint256 totalPrice = marketInfo.yesPrice + marketInfo.noPrice;
             if (marketInfo.noPrice == 0) {
                 marketInfo.noShares = 0;
-                marketInfo.yesShares = maxShares;
-            } else {
-                marketInfo.noShares = ((marketInfo.noPrice * maxShares) /
-                    totalPrice);
-                marketInfo.yesShares = ((marketInfo.yesPrice * maxShares) /
-                    totalPrice);
+                if (marketInfo.yesPrice != 0) {
+                    marketInfo.yesShares = maxShares;
+                }
+                return;
             }
+            marketInfo.noShares = ((marketInfo.noPrice * maxShares) /
+                totalPrice);
+            marketInfo.yesShares = ((marketInfo.yesPrice * maxShares) /
+                totalPrice);
         }
     }
 
