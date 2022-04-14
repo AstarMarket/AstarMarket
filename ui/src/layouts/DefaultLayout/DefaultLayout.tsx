@@ -1,5 +1,6 @@
 import type { ReactNode, VFC } from 'react'
 
+import AppFooter from '~/components/AppFooter'
 import AppHeader from '~/components/AppHeader'
 
 type DefaultLayoutProps = {
@@ -13,6 +14,7 @@ const DefaultLayout: VFC<DefaultLayoutProps> = ({ children }) => {
         <AppHeader />
       </div>
       <div className="max-w-5xl mx-auto pb-10">{children}</div>
+      <AppFooter />
     </>
   )
 }
