@@ -5,6 +5,7 @@ import Link from 'next/link'
 import { useEffect, useState } from 'react'
 
 import BuyForm from '~/components/BuyForm'
+import MarketShares from '~/components/MarketShares/MarketShares'
 import SellForm from '~/components/SellForm'
 import TransactionHistory from '~/components/TransactionHistory'
 import { useMetaMask } from '~/hooks/useMetaMask'
@@ -83,7 +84,7 @@ export default function Index({
         </div>
       </div>
       <div className="mt-8 grid grid-cols-3 gap-4">
-        <div className="col-span-2 border rounded p-5"></div>
+        <MarketShares market={market} />
         {!hasAlreadyBought ? (
           <BuyForm market={market} />
         ) : (

@@ -50,7 +50,7 @@ const BuyForm: VFC<Props> = (props) => {
   }
 
   return (
-    <form className="border rounded p-5" onSubmit={(e) => handleBuy(e)}>
+    <form className="border rounded p-5 h-72" onSubmit={(e) => handleBuy(e)}>
       <span className="text-md">Pick outcome</span>
       <div className="mt-2 grid grid-cols-2 gap-4">
         <input
@@ -115,9 +115,6 @@ const BuyForm: VFC<Props> = (props) => {
         <div className="text-error mt-2">
           Please connect your account first.
         </div>
-      )}
-      {isBuySuccess && (
-        <div className="mt-4">You have successfully purchased.</div>
       )}
     </form>
   )

@@ -12,6 +12,7 @@ describe("PredictionMarket", function () {
     market = await PredictionMarket.deploy();
     await market.deployed();
   });
+
   describe("buy", () => {
     it("Should emit Buy", async () => {
       expect(await market.buy(Vote.Yes))
@@ -31,6 +32,7 @@ describe("PredictionMarket", function () {
       ).to.be.revertedWith("Already bought.");
     });
   });
+
   describe("getPosition", () => {
     it("Returns position value correctly", async () => {
       const [user] = await ethers.getSigners();
@@ -44,6 +46,7 @@ describe("PredictionMarket", function () {
       expect(position.vote).to.be.equal(Vote.No);
     });
   });
+
   describe("sell", () => {
     it("Sell correctly", async () => {
       const from = (
@@ -79,6 +82,122 @@ describe("PredictionMarket", function () {
       expect(afterSellPosition2.amount.toString()).to.be.equal(
         buyAmount2.toString()
       );
+    });
+  });
+
+  describe("getMarketShares", () => {
+    it("returns [10000, 0] for the first time", async () => {
+      const [user] = await ethers.getSigners();
+      const buyAmount = ethers.utils.parseEther("1");
+      await market.buy(Vote.Yes, {
+        from: user.address,
+        value: buyAmount,
+      });
+      const shares = await market.getMarketShares();
+      expect(shares[0]).to.be.equal(10000);
+      expect(shares[1]).to.be.equal(0);
+    });
+    it("returns [10000, 0] when another user buys Yes", async () => {
+      const [user1, user2] = await ethers.getSigners();
+      const buyAmount = ethers.utils.parseEther("1");
+      await market.buy(Vote.Yes, {
+        from: user1.address,
+        value: buyAmount,
+      });
+      await market.connect(user2).buy(Vote.Yes, {
+        from: user2.address,
+        value: buyAmount,
+      });
+      const shares = await market.getMarketShares();
+      expect(shares[0]).to.be.equal(10000);
+      expect(shares[1]).to.be.equal(0);
+    });
+    it("return [0, 0] when a user sells after buy", async () => {
+      const [user] = await ethers.getSigners();
+      const buyAmount = ethers.utils.parseEther("1");
+      await market.buy(Vote.Yes, {
+        from: user.address,
+        value: buyAmount,
+      });
+      await market.sell();
+      const shares = await market.getMarketShares();
+      expect(shares[0]).to.be.equal(0);
+      expect(shares[1]).to.be.equal(0);
+    });
+    it("return [3333, 6666] when three users buy Yes(1) or No(2)", async () => {
+      const [user, user2, user3] = await ethers.getSigners();
+      const buyAmount = ethers.utils.parseEther("1");
+      await market.buy(Vote.Yes, {
+        from: user.address,
+        value: buyAmount,
+      });
+      await market.connect(user2).buy(Vote.No, {
+        from: user2.address,
+        value: buyAmount,
+      });
+      await market.connect(user3).buy(Vote.No, {
+        from: user3.address,
+        value: buyAmount,
+      });
+      const shares = await market.getMarketShares();
+      expect(shares[0]).to.be.equal(3333);
+      expect(shares[1]).to.be.equal(6666);
+    });
+    it("return [0, 10000] when three users action Yes(1) and No(2) and sell Yes(1)", async () => {
+      const [user, user2, user3] = await ethers.getSigners();
+      const buyAmount = ethers.utils.parseEther("1");
+      await market.buy(Vote.Yes, {
+        from: user.address,
+        value: buyAmount,
+      });
+      await market.connect(user2).buy(Vote.No, {
+        from: user2.address,
+        value: buyAmount,
+      });
+      await market.connect(user3).buy(Vote.No, {
+        from: user3.address,
+        value: buyAmount,
+      });
+      await market.sell();
+      const shares = await market.getMarketShares();
+      expect(shares[0]).to.be.equal(0);
+      expect(shares[1]).to.be.equal(10000);
+    });
+    it("return [5000, 5000] when three users action Yes(1) and No(2) and sell No(1)", async () => {
+      const [user, user2, user3] = await ethers.getSigners();
+      const buyAmount = ethers.utils.parseEther("1");
+      await market.buy(Vote.Yes, {
+        from: user.address,
+        value: buyAmount,
+      });
+      await market.connect(user2).buy(Vote.No, {
+        from: user2.address,
+        value: buyAmount,
+      });
+      await market.connect(user3).buy(Vote.No, {
+        from: user3.address,
+        value: buyAmount,
+      });
+      await market.connect(user3).sell();
+      const shares = await market.getMarketShares();
+      expect(shares[0]).to.be.equal(5000);
+      expect(shares[1]).to.be.equal(5000);
+    });
+    it("return [9900, 9] when the percentage of 'yes' is too large", async () => {
+      const [user, user2] = await ethers.getSigners();
+      const buyAmount1 = ethers.utils.parseEther("1000");
+      const buyAmount2 = ethers.utils.parseEther("1");
+      await market.buy(Vote.Yes, {
+        from: user.address,
+        value: buyAmount1,
+      });
+      await market.connect(user2).buy(Vote.No, {
+        from: user2.address,
+        value: buyAmount2,
+      });
+      const shares = await market.getMarketShares();
+      expect(shares[0]).to.be.equal(9990);
+      expect(shares[1]).to.be.equal(9);
     });
   });
 });

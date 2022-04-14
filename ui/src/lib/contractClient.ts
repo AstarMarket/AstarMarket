@@ -79,6 +79,18 @@ class ContractClient {
     await sellTxn.wait()
     return sellTxn
   }
+
+  public getMarketShares = async (
+    contractAddress: string,
+  ): Promise<[BigNumber, BigNumber]> => {
+    const signer = this.provider.getSigner()
+    const contract = new ethers.Contract(
+      contractAddress,
+      PredictionMarketConstruct.abi,
+      signer
+    )
+    return await contract.functions.getMarketShares()
+  }
 }
 
 export default ContractClient
