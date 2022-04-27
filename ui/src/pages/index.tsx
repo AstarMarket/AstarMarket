@@ -1,4 +1,4 @@
-import { Market } from '@prisma/client'
+import { Market, MarketTransaction } from '@prisma/client'
 import dayjs from 'dayjs'
 import type { InferGetServerSidePropsType } from 'next'
 import Link from 'next/link'
@@ -9,6 +9,13 @@ import { prisma } from '~/lib/prisma'
 export const getServerSideProps = async () => {
   const markets = await prisma.market.findMany({
     orderBy: { createdAt: 'desc' },
+    include: {
+      transactions: {
+        select: {
+          amount: true,
+        }
+      },
+    }
   })
   return { props: { markets } }
 }
@@ -20,6 +27,14 @@ export default function Index({
     return dayjs().subtract(3, 'day').isBefore(dayjs(market.createdAt))
   }
 
+  const marketVolume = (marketTransactions: MarketTransaction[]) => {
+    const sum = marketTransactions.reduce((sum, history) => {
+      return sum + Number(history.amount)
+    }, 0)
+
+    return Math.round(sum * 100) / 100
+  }
+
   return (
     <>
       <AppHero />
@@ -28,13 +43,19 @@ export default function Index({
         {markets.map((market) => {
           return (
             <Link key={market.id} href={`/markets/${market.contract}`}>
-              <a className="flex p-5 border rounded cursor-pointer hover:border-gray-300">
-                <span className="mr-2">{market.title}</span>
-                {isNew(market) && (
-                  <span className="p-1 text-green-400 bg-green-100 rounded ml-auto h-8 w-12 text-center">
-                    New
-                  </span>
-                )}
+              <a className="flex flex-col p-5 border rounded cursor-pointer hover:border-gray-300">
+                <div className="flex">
+                  <span className="mr-2">{market.title}</span>
+                  {isNew(market) && (
+                    <span className="p-1 text-green-400 bg-green-100 rounded ml-auto h-8 w-12 text-center">
+                      New
+                    </span>
+                  )}
+                </div>
+                <div className="mt-6">
+                  <p className="text-xs text-gray-500">Volume</p>
+                  <p className="text-sm mt-2">{marketVolume(market.transactions as MarketTransaction[])}&nbsp;SBY</p>
+                </div>
               </a>
             </Link>
           )
