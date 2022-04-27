@@ -13,9 +13,9 @@ export const getServerSideProps = async () => {
       transactions: {
         select: {
           amount: true,
-        }
+        },
       },
-    }
+    },
   })
   return { props: { markets } }
 }
@@ -54,7 +54,10 @@ export default function Index({
                 </div>
                 <div className="mt-6">
                   <p className="text-xs text-gray-500">Volume</p>
-                  <p className="text-sm mt-2">{marketVolume(market.transactions as MarketTransaction[])}&nbsp;SBY</p>
+                  <p className="text-sm mt-2">
+                    {marketVolume(market.transactions as MarketTransaction[])}
+                    &nbsp;SBY
+                  </p>
                 </div>
               </a>
             </Link>

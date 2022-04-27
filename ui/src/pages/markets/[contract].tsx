@@ -28,7 +28,6 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
   const marketTransactions = await prisma.marketTransaction.findMany({
     where: { marketId: market?.id },
   })
-  console.log(marketTransactions)
   return { props: { market, marketTransactions } }
 }
 
