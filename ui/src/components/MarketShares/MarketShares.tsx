@@ -16,8 +16,8 @@ const MarketShares: VFC<Props> = (props) => {
       try {
         const contractClient = new ContractClient(window)
         const res = await contractClient.getMarketShares(props.market.contract)
-        const yesResult = Math.round(Number(res[0]) * 10 / 100) / 10
-        const noResult = Math.round(Number(res[1]) * 10 / 100) / 10
+        const yesResult = Math.round((Number(res[0]) * 10) / 100) / 10
+        const noResult = Math.round((Number(res[1]) * 10) / 100) / 10
         setYesShare(yesResult)
         setNoShare(noResult)
       } catch (error) {
@@ -45,7 +45,9 @@ const MarketShares: VFC<Props> = (props) => {
             <div className="relative mt-2 bg-gray-100 h-2 rounded-xl w-full">
               <div
                 style={{
-                  backgroundColor: '#e0bee6', width: `${yesShare}%` }}
+                  backgroundColor: '#e0bee6',
+                  width: `${yesShare}%`,
+                }}
                 className="absolute rounded-xl h-2 w-20"
               ></div>
             </div>

@@ -1,4 +1,4 @@
-import type { Market } from '@prisma/client'
+import type { Market, MarketTransaction } from '@prisma/client'
 import type { GetServerSideProps, InferGetServerSidePropsType } from 'next'
 import ErrorPage from 'next/error'
 import Link from 'next/link'
@@ -15,6 +15,7 @@ import { truncate } from '~/lib/text'
 
 type ServerSideProps = {
   market: Market | null
+  marketTransactions: MarketTransaction[]
 }
 
 export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
@@ -24,14 +25,26 @@ export const getServerSideProps: GetServerSideProps<ServerSideProps> = async (
   const market = await prisma.market.findFirst({
     where: { contract: contract as string },
   })
-  return { props: { market } }
+  const marketTransactions = await prisma.marketTransaction.findMany({
+    where: { marketId: market?.id },
+  })
+  return { props: { market, marketTransactions } }
 }
 
 export default function Index({
   market,
+  marketTransactions,
 }: InferGetServerSidePropsType<typeof getServerSideProps>) {
   const { account, isShibuyaNetwork, isLocalhostNetwork } = useMetaMask()
   const [hasAlreadyBought, setHasAlreadyBought] = useState(false)
+
+  const marketVolume = () => {
+    const sum = marketTransactions?.reduce((sum, history) => {
+      return sum + Number(history.amount)
+    }, 0)
+
+    return Math.round(sum * 100) / 100
+  }
 
   useEffect(() => {
     async function check() {
@@ -66,8 +79,12 @@ export default function Index({
     <div className="mt-8">
       <div className="p-5 border rounded">
         <h1 className="font-bold text-xl">{market.title}</h1>
-        <div className="mt-4">
-          <p className="text-sm text-gray-500">
+        <div className="mt-4 text-sm text-gray-500">
+          <p className="mt-8">
+            Volume:&nbsp;
+            <span className="font-bold">{marketVolume()}&nbsp;</span>SBY
+          </p>
+          <p className="mt-4">
             Deployed by:&nbsp;
             <Link
               href={`${process.env.SHIBUYA_SUBSCAN_URL}/account/${market.contract}`}
