@@ -27,7 +27,7 @@ export default function Index({
     return dayjs().subtract(3, 'day').isBefore(dayjs(market.createdAt))
   }
 
-  const marketVolume = (marketTransactions: MarketTransaction[]) => {
+  const marketVolume = (marketTransactions: Pick<MarketTransaction, 'amount'>[]) => {
     const sum = marketTransactions.reduce((sum, history) => {
       return sum + Number(history.amount)
     }, 0)
@@ -55,7 +55,7 @@ export default function Index({
                 <div className="mt-6">
                   <p className="text-xs text-gray-500">Volume</p>
                   <p className="text-sm mt-2">
-                    {marketVolume(market.transactions as MarketTransaction[])}
+                    {marketVolume(market.transactions)}
                     &nbsp;SBY
                   </p>
                 </div>
